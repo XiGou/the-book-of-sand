@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { ContentGenerator } from '../lib/contentGenerator'
 import { 
   worldCities, 
@@ -6,7 +6,7 @@ import {
   newsEvents, 
   dramas, 
   varietyShows 
-} from '../data/resources'
+} from '../data/television'
 import './Television.css'
 
 type ChannelType = 'news' | 'variety' | 'drama'
@@ -78,8 +78,23 @@ function generateChannelContent(channel: Channel): ChannelContent {
 export function Television() {
   const [currentChannelIndex, setCurrentChannelIndex] = useState(0)
   const [isChanging, setIsChanging] = useState(false)
-  const [currentChannel, setCurrentChannel] = useState<Channel>(() => generateChannel(0))
-  const [content, setContent] = useState<ChannelContent>(() => generateChannelContent(generateChannel(0)))
+  // 存储每个索引对应的随机seed，确保每次前进时随机，返回时保持一致
+  const seedCacheRef = useRef<Map<number, number>>(new Map())
+  
+  // 获取或生成当前索引的随机seed
+  const getSeedForIndex = useCallback((index: number): number => {
+    if (!seedCacheRef.current.has(index)) {
+      // 生成一个完全随机的seed（使用大范围的随机数）
+      const randomSeed = Math.floor(Math.random() * 1000000000) + index * 7919
+      seedCacheRef.current.set(index, randomSeed)
+    }
+    return seedCacheRef.current.get(index)!
+  }, [])
+  
+  // 使用缓存的seed生成频道和内容
+  const currentSeed = useMemo(() => getSeedForIndex(currentChannelIndex), [currentChannelIndex, getSeedForIndex])
+  const currentChannel = useMemo(() => generateChannel(currentSeed), [currentSeed])
+  const content = useMemo(() => generateChannelContent(currentChannel), [currentChannel])
 
   // 换台：切换到下一个频道
   const changeChannel = useCallback((direction: 'next' | 'prev' = 'next') => {
@@ -91,9 +106,6 @@ export function Television() {
       
       // 使用setTimeout确保状态更新后再生成内容
       setTimeout(() => {
-        const newChannel = generateChannel(newIndex)
-        setCurrentChannel(newChannel)
-        setContent(generateChannelContent(newChannel))
         setIsChanging(false)
       }, 300)
       
