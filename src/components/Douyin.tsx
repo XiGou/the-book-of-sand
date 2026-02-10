@@ -174,6 +174,9 @@ export function Douyin() {
               <EmojiScene videoType={video.videoType} seed={video.id} />
               {video.newsText && <NewsText text={video.newsText} />}
               <div className="video-type-label">{video.videoType.name}</div>
+              {video.videoType.description && (
+                <div className="video-description">{video.videoType.description}</div>
+              )}
             </div>
             <div className="douyin-video-overlay">
               <div className="douyin-title">{video.title}</div>
