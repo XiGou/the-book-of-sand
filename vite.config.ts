@@ -23,6 +23,7 @@ export default defineConfig({
           'data-television': ['./src/data/television'],
           'data-consumerism': ['./src/data/resources'],
           'data-isms': ['./src/data/isms'],
+          'data-crazyJourney': ['./src/data/crazyJourney'],
           'data-llm': ['./src/data/llm'],
           // 工具库单独打包
           'lib-utils': ['./src/lib/contentGenerator', './src/lib/book', './src/lib/gameOfLife'],

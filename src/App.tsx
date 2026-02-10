@@ -12,6 +12,7 @@ const Xiaohongshu = lazy(() => import('./components/Xiaohongshu').then(m => ({ d
 const Douyin = lazy(() => import('./components/Douyin').then(m => ({ default: m.Douyin })))
 const Consumerism = lazy(() => import('./components/Consumerism').then(m => ({ default: m.Consumerism })))
 const Ismism = lazy(() => import('./components/Ismism').then(m => ({ default: m.Ismism })))
+const CrazyJourney = lazy(() => import('./components/CrazyJourney').then(m => ({ default: m.CrazyJourney })))
 const LLM = lazy(() => import('./components/LLM').then(m => ({ default: m.LLM })))
 
 // 加载占位组件
@@ -35,7 +36,7 @@ function App() {
   const openBook = () => setView('reader')
   const goToCover = () => setView('cover')
 
-  const isVariationPage = ['dazibao', 'television', 'xiaohongshu', 'douyin', 'consumerism', 'ismism', 'llm'].includes(view)
+  const isVariationPage = ['dazibao', 'television', 'xiaohongshu', 'douyin', 'consumerism', 'ismism', 'crazyJourney', 'llm'].includes(view)
 
   return (
     <div className="app-layout">
@@ -79,6 +80,11 @@ function App() {
         {view === 'ismism' && (
           <Suspense fallback={<LoadingFallback />}>
             <Ismism />
+          </Suspense>
+        )}
+        {view === 'crazyJourney' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <CrazyJourney />
           </Suspense>
         )}
         {view === 'llm' && (

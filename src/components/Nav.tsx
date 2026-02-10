@@ -4,7 +4,7 @@ import { VARIATIONS, type VariationId } from './Variations'
 
 import './Nav.css'
 
-export type View = 'cover' | 'reader' | 'about' | 'dazibao' | 'television' | 'xiaohongshu' | 'douyin' | 'consumerism' | 'ismism' | 'llm'
+export type View = 'cover' | 'reader' | 'about' | 'dazibao' | 'television' | 'xiaohongshu' | 'douyin' | 'consumerism' | 'ismism' | 'crazyJourney' | 'llm'
 
 interface NavProps {
   currentView: View
@@ -42,7 +42,7 @@ export function Nav({ currentView, onNavigate, lang }: NavProps) {
   const t = LABELS[lang]
   const isBook = currentView === 'cover' || currentView === 'reader'
   const isAbout = currentView === 'about'
-  const isVariation = ['dazibao', 'television', 'xiaohongshu', 'douyin', 'consumerism', 'ismism', 'llm'].includes(currentView)
+  const isVariation = ['dazibao', 'television', 'xiaohongshu', 'douyin', 'consumerism', 'ismism', 'crazyJourney', 'llm'].includes(currentView)
   const [showVariations, setShowVariations] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLElement>(null)

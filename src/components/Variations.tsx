@@ -91,6 +91,21 @@ export const VARIATIONS = [
     } 
   },
   { 
+    id: 'crazyJourney', 
+    name: { 
+      cn: '疯狂之旅', 
+      en: 'Crazy Journey',
+      es: 'Viaje Loco',
+      ja: '瘋狂の旅',
+      pt: 'Viagem Louca',
+      fr: 'Voyage Fou',
+      de: 'Verrückte Reise',
+      hi: 'पागल यात्रा',
+      la: 'Iter Furiosum',
+      el: 'Τρελό Ταξίδι',
+    } 
+  },
+  { 
     id: 'ismism', 
     name: { 
       cn: '主义主义', 
