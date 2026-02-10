@@ -1,15 +1,20 @@
 .about {
   width: 100%;
   max-width: 640px;
-  min-height: 100vh;
-  padding: 2rem 1.5rem 3rem;
+  min-height: calc(100vh - var(--nav-height, 7rem));
+  padding: 0 1.5rem 3rem;
+  /* Ensure content starts below nav: app-main has padding-top, but we add extra safety */
+  padding-top: 2rem;
+  margin-top: 0;
   font-family: var(--font-serif-en);
   color: var(--color-paper);
+  position: relative;
 }
 
-.about-header {
-  margin-bottom: 2.5rem;
-  position: relative;
+.about-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
 }
 
 .about-title {
@@ -17,20 +22,17 @@
   font-weight: 600;
   letter-spacing: 0.05em;
   margin: 0 0 1rem;
+  margin-top: 0;
+  padding-top: 0;
   color: var(--color-paper);
+  scroll-margin-top: var(--nav-height, 7rem);
 }
 
 .about-intro {
   font-size: 0.95rem;
   line-height: 1.65;
-  margin: 0;
+  margin: 0 0 2rem;
   opacity: 0.92;
-}
-
-.about-main {
-  display: flex;
-  flex-direction: column;
-  gap: 2.25rem;
 }
 
 .about-section h2 {
@@ -88,3 +90,4 @@
     font-size: 0.95rem;
   }
 }
+

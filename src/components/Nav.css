@@ -74,18 +74,106 @@
 }
 
 .site-nav-sep {
-  color: rgba(244, 240, 232, 0.25);
-  font-size: 0.75rem;
+  color: rgba(244, 240, 232, 0.4);
+  font-size: 1.1rem;
   user-select: none;
+  line-height: 1;
 }
 
 .site-nav-label {
   display: inline-block;
 }
 
+.site-nav-dropdown-wrapper {
+  position: relative;
+}
+
+.site-nav-dropdown-arrow {
+  display: inline-block;
+  margin-left: 0.3rem;
+  font-size: 0.6rem;
+  opacity: 0.6;
+  transition: transform 0.2s ease;
+  vertical-align: middle;
+}
+
+.site-nav-link[aria-expanded="true"] .site-nav-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.site-nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.5rem;
+  min-width: 180px;
+  background: rgba(26, 24, 20, 0.98);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(244, 240, 232, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  padding: 0.5rem 0;
+  z-index: 200;
+  font-family: var(--font-serif-en);
+}
+
+.site-nav-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: rgba(244, 240, 232, 0.7);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.site-nav-dropdown-item:hover {
+  background: rgba(244, 240, 232, 0.08);
+  color: rgba(244, 240, 232, 0.95);
+}
+
+.site-nav-dropdown-item.is-active {
+  color: var(--color-paper);
+  background: rgba(244, 240, 232, 0.05);
+}
+
+.site-nav-dropdown-divider {
+  height: 1px;
+  background: rgba(244, 240, 232, 0.1);
+  margin: 0.4rem 0.75rem;
+}
+
+.site-nav-dropdown-label {
+  padding: 0.4rem 1rem 0.3rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: rgba(244, 240, 232, 0.5);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
 @media (min-width: 560px) {
   .site-nav-link {
     font-size: 0.95rem;
     letter-spacing: 0.15em;
+  }
+
+  .site-nav-sep {
+    font-size: 1.2rem;
+  }
+
+  .site-nav-dropdown {
+    min-width: 200px;
+  }
+
+  .site-nav-dropdown-item {
+    font-size: 0.9rem;
   }
 }

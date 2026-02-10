@@ -221,46 +221,37 @@ const content = {
 
 export function About({ lang }: AboutProps) {
   const t = content[lang] || content.en
-  const useCJKFont = lang === 'cn' || lang === 'ja' || lang === 'hi'
 
   return (
-    <div 
-      className="about" 
-      style={{
-        fontFamily: useCJKFont ? 'var(--font-serif-cn)' : undefined,
-      }}
-    >
-      <header className="about-header">
-        <h1 className="about-title">{t.title}</h1>
-        <p className="about-intro">{t.intro}</p>
-      </header>
+    <div className="about">
+        <main className="about-main">
+          <h1 className="about-title">{t.title}</h1>
+          <p className="about-intro">{t.intro}</p>
+          <section className="about-section">
+            <h2>{t.section1Title}</h2>
+            <p className="about-lead">{t.section1Lead}</p>
+            <blockquote className="about-quote">{t.quote1}</blockquote>
+            <blockquote className="about-quote">{t.quote2}</blockquote>
+            <blockquote className="about-quote">{t.quote3}</blockquote>
+          </section>
 
-      <main className="about-main">
-        <section className="about-section">
-          <h2>{t.section1Title}</h2>
-          <p className="about-lead">{t.section1Lead}</p>
-          <blockquote className="about-quote">{t.quote1}</blockquote>
-          <blockquote className="about-quote">{t.quote2}</blockquote>
-          <blockquote className="about-quote">{t.quote3}</blockquote>
-        </section>
+          <section className="about-section">
+            <h2>{t.section2Title}</h2>
+            <p className="about-lead">{t.section2Lead}</p>
+            <p className="about-epigraph">{t.epigraph}</p>
+            <blockquote className="about-quote">{t.quote4}</blockquote>
+            <blockquote className="about-quote">{t.quote5}</blockquote>
+            <blockquote className="about-quote">{t.quote6}</blockquote>
+          </section>
 
-        <section className="about-section">
-          <h2>{t.section2Title}</h2>
-          <p className="about-lead">{t.section2Lead}</p>
-          <p className="about-epigraph">{t.epigraph}</p>
-          <blockquote className="about-quote">{t.quote4}</blockquote>
-          <blockquote className="about-quote">{t.quote5}</blockquote>
-          <blockquote className="about-quote">{t.quote6}</blockquote>
-        </section>
-
-        <section className="about-section">
-          <h2>{t.section3Title}</h2>
-          <p className="about-lead">{t.section3Lead}</p>
-          <p className="about-revelation">{t.revelation1}</p>
-          <p className="about-revelation">{t.revelation2}</p>
-          <p className="about-revelation">{t.revelation3}</p>
-        </section>
-      </main>
+          <section className="about-section">
+            <h2>{t.section3Title}</h2>
+            <p className="about-lead">{t.section3Lead}</p>
+            <p className="about-revelation">{t.revelation1}</p>
+            <p className="about-revelation">{t.revelation2}</p>
+            <p className="about-revelation">{t.revelation3}</p>
+          </section>
+        </main>
     </div>
   )
 }

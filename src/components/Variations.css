@@ -1,0 +1,45 @@
+.variations-selector {
+  padding: 2rem 1.5rem;
+  border-left: 1px solid rgba(244, 240, 232, 0.2);
+  min-width: 220px;
+  max-width: 280px;
+  flex-shrink: 0;
+  background: rgba(26, 24, 20, 0.3);
+}
+
+.variations-title {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin: 0 0 1rem;
+  color: var(--color-paper);
+  opacity: 0.9;
+}
+
+.variations-dropdown {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: rgba(26, 24, 20, 0.6);
+  border: 1px solid rgba(244, 240, 232, 0.2);
+  border-radius: 4px;
+  color: var(--color-paper);
+  font-family: var(--font-serif-en);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.variations-dropdown:hover {
+  border-color: rgba(244, 240, 232, 0.3);
+  background: rgba(26, 24, 20, 0.7);
+}
+
+.variations-dropdown:focus {
+  outline: 1px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.variations-dropdown option {
+  background: #1a1814;
+  color: var(--color-paper);
+}
