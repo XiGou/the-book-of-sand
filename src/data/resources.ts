@@ -3,6 +3,8 @@
  * 所有页面共享的资源池定义
  */
 
+import { worldCities, newsEvents } from './television'
+
 // 电视频道资源
 export const tvResources = {
   news: {
