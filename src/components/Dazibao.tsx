@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { ContentGenerator } from '../lib/contentGenerator'
-import { dazibaoResources } from '../data/resources'
+import { dazibaoResources } from '../data/dazibao'
 import './Dazibao.css'
 
 interface DazibaoContent {
@@ -39,7 +39,21 @@ export function Dazibao() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isScrolling, setIsScrolling] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  const currentDazibao = generateDazibao(currentIndex)
+  // 存储每个索引对应的随机seed，确保每次前进时随机，返回时保持一致
+  const seedCacheRef = useRef<Map<number, number>>(new Map())
+  
+  // 获取或生成当前索引的随机seed
+  const getSeedForIndex = useCallback((index: number): number => {
+    if (!seedCacheRef.current.has(index)) {
+      // 生成一个完全随机的seed（使用大范围的随机数）
+      const randomSeed = Math.floor(Math.random() * 1000000000) + index * 7919
+      seedCacheRef.current.set(index, randomSeed)
+    }
+    return seedCacheRef.current.get(index)!
+  }, [])
+  
+  const currentSeed = useMemo(() => getSeedForIndex(currentIndex), [currentIndex, getSeedForIndex])
+  const currentDazibao = useMemo(() => generateDazibao(currentSeed), [currentSeed])
 
   const scrollToPage = useCallback((direction: 'next' | 'prev') => {
     if (isScrolling) return
