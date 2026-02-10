@@ -31,17 +31,17 @@ function generateProduct(seed: number): ProductContent {
   const gen = new ContentGenerator(seed)
   
   // 选择商品和品牌
-  const product = gen.selectFrom(consumerismResources.products)
-  const brand = gen.selectFrom(consumerismResources.brands)
+  const product = gen.selectFrom(consumerismResources.products) as string
+  const brand = gen.selectFrom(consumerismResources.brands) as string
   
   // 标题：品牌 + 商品
   const name = `${brand} ${product}`
   
   // 获取商品对应的emoji
-  const emoji = consumerismResources.productEmojis[product] || '📦'
+  const emoji = (consumerismResources.productEmojis as Record<string, string>)[product] || '📦'
   
   // 生成价格
-  const priceRange = gen.selectFrom(consumerismResources.priceRanges)
+  const priceRange = gen.selectFrom(consumerismResources.priceRanges) as { min: number; max: number }
   const originalPrice = Math.floor(
     gen.getRandom().nextFloat(priceRange.min, priceRange.max)
   )
@@ -67,16 +67,16 @@ function generateProduct(seed: number): ProductContent {
   
   // 生成标签
   const tag = gen.getRandom().next() < 0.4 
-    ? gen.selectFrom(consumerismResources.tags) 
+    ? (gen.selectFrom(consumerismResources.tags) as string)
     : null
   
   // 生成广告词（2-4条）
   const adCount = gen.getRandom().nextInt(2, 4)
   const adSlogans: AdSlogan[] = []
   for (let i = 0; i < adCount; i++) {
-    const sloganText = gen.selectFrom(consumerismResources.adSlogans)
-    const fontSize = gen.selectFrom(consumerismResources.adFontSizes)
-    const fontWeight = gen.selectFrom(consumerismResources.adFontWeights)
+    const sloganText = gen.selectFrom(consumerismResources.adSlogans) as string
+    const fontSize = gen.selectFrom(consumerismResources.adFontSizes) as string
+    const fontWeight = gen.selectFrom(consumerismResources.adFontWeights) as string
     const rotation = gen.getRandom().nextFloat(-15, 15) // 随机角度
     const top = `${gen.getRandom().nextFloat(10, 90)}%` // 随机位置
     const left = `${gen.getRandom().nextFloat(5, 95)}%`

@@ -22,16 +22,16 @@ interface PostContent {
 
 function generatePost(seed: number): PostContent {
   const gen = new ContentGenerator(seed)
-  const topic = gen.selectFrom(xiaohongshuResources.topics)
-  const emoji = gen.selectFrom(xiaohongshuResources.emojis)
-  const titleTemplate = gen.selectFrom(xiaohongshuResources.titles)
-  const contentTemplate = gen.selectFrom(xiaohongshuResources.contentTemplates)
-  const product = gen.selectFrom(xiaohongshuResources.products)
+  const topic = gen.selectFrom(xiaohongshuResources.topics) as string
+  const emoji = gen.selectFrom(xiaohongshuResources.emojis) as string
+  const titleTemplate = gen.selectFrom(xiaohongshuResources.titles) as string
+  const contentTemplate = gen.selectFrom(xiaohongshuResources.contentTemplates) as string
+  const product = gen.selectFrom(xiaohongshuResources.products) as string
   
   const title = gen.generateText(titleTemplate, { emoji: [emoji], topic: [topic] })
   const content = gen.generateText(contentTemplate, { product: [product] })
   
-  const tags = gen.selectMultiple(xiaohongshuResources.tags, gen.getRandom().nextInt(2, 4))
+  const tags = gen.selectMultiple(xiaohongshuResources.tags, gen.getRandom().nextInt(2, 4)) as string[]
   
   const imageCount = gen.getRandom().nextInt(1, 4)
   
@@ -50,7 +50,7 @@ function generatePost(seed: number): PostContent {
     // 30%概率叠加词句
     const hasOverlayText = imageGen.getRandom().next() < 0.3
     const overlayText = hasOverlayText 
-      ? imageGen.selectFrom(xiaohongshuResources.internetSlang)
+      ? (imageGen.selectFrom(xiaohongshuResources.internetSlang) as string)
       : null
     
     imageStyles.push({

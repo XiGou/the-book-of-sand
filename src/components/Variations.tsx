@@ -1,10 +1,6 @@
 import type { Lang } from '../lib/book'
 import './Variations.css'
 
-interface VariationsProps {
-  lang: Lang
-}
-
 const LABELS = {
   cn: { title: '不仅如此' },
   en: { title: 'More Than That' },

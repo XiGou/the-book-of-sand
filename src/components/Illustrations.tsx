@@ -4,7 +4,6 @@
  * Now uses Conway's Game of Life patterns generated with CSS.
  */
 
-import React from 'react';
 import { GameOfLifeIllustration } from './GameOfLifeIllustration';
 
 export function Illustration({ id }: { id: number }) {

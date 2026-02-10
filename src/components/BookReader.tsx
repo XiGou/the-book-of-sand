@@ -368,7 +368,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
             {hasIllustration ? (
               <>
                 <Illustration id={rawIllustrationId!} />
-                <p className="page-illustration-hint">{t.illustrationHint || t.illustrationGone}</p>
+                <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
               </>
             ) : (
               <div
@@ -410,7 +410,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                     {hasNextPageIllustration ? (
                       <>
                         <Illustration id={nextPageIllustrationId!} />
-                        <p className="page-illustration-hint">{t.illustrationHint || t.illustrationGone}</p>
+                        <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
                       </>
                     ) : (
                       <div
@@ -461,7 +461,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                     {hasNextPageIllustration && (
                       <>
                         <Illustration id={nextPageIllustrationId!} />
-                        <p className="page-illustration-hint">{t.illustrationHint || t.illustrationGone}</p>
+                        <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
                       </>
                     )}
                   </>

@@ -3,7 +3,7 @@
  * Generates CSS-based Game of Life patterns
  */
 
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { generateGameOfLife, getGameOfLifeConfig } from '../lib/gameOfLife'
 import './GameOfLifeIllustration.css'
 
