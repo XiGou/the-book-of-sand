@@ -3,10 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="沙之书 · The Book of Sand - 基于博尔赫斯短篇《沙之书》的无限之书阅读器" />
     <title>沙之书 · The Book of Sand</title>
+    <!-- 预连接 Google Fonts 以加速字体加载 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- 关键 CSS 内联或预加载 -->
+    <style>
+      /* 首屏关键样式 - 避免 FOUC */
+      body {
+        margin: 0;
+        background: #1a1814;
+        color: #1a1a1a;
+        font-family: 'Cormorant Garamond', Georgia, serif;
+      }
+      #root {
+        min-height: 100vh;
+      }
+      /* 加载占位符样式 */
+      .loading-placeholder {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-size: 1.2rem;
+        color: #f4f0e8;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- 首屏加载占位符，避免空白 -->
+      <div class="loading-placeholder">加载中...</div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

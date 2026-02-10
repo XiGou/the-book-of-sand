@@ -1,16 +1,32 @@
-import { useState } from 'react'
+import { useState, Suspense, lazy } from 'react'
 import { About } from './components/About'
 import { BookCover } from './components/BookCover'
 import { BookReader } from './components/BookReader'
 import { Nav, type View } from './components/Nav'
-import { Dazibao } from './components/Dazibao'
-import { Television } from './components/Television'
-import { Xiaohongshu } from './components/Xiaohongshu'
-import { Douyin } from './components/Douyin'
-import { Consumerism } from './components/Consumerism'
-import { Ismism } from './components/Ismism'
-import { LLM } from './components/LLM'
 import type { Lang } from './lib/book'
+
+// 懒加载变体页面组件（按需加载，减少首屏包大小）
+const Dazibao = lazy(() => import('./components/Dazibao').then(m => ({ default: m.Dazibao })))
+const Television = lazy(() => import('./components/Television').then(m => ({ default: m.Television })))
+const Xiaohongshu = lazy(() => import('./components/Xiaohongshu').then(m => ({ default: m.Xiaohongshu })))
+const Douyin = lazy(() => import('./components/Douyin').then(m => ({ default: m.Douyin })))
+const Consumerism = lazy(() => import('./components/Consumerism').then(m => ({ default: m.Consumerism })))
+const Ismism = lazy(() => import('./components/Ismism').then(m => ({ default: m.Ismism })))
+const LLM = lazy(() => import('./components/LLM').then(m => ({ default: m.LLM })))
+
+// 加载占位组件
+const LoadingFallback = () => (
+  <div style={{ 
+    display: 'flex', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    height: '100vh',
+    fontSize: '1.2rem',
+    color: 'var(--text-color, #333)'
+  }}>
+    加载中...
+  </div>
+)
 
 function App() {
   const [view, setView] = useState<View>('cover')
@@ -35,13 +51,41 @@ function App() {
             onClose={goToCover}
           />
         )}
-        {view === 'dazibao' && <Dazibao />}
-        {view === 'television' && <Television />}
-        {view === 'xiaohongshu' && <Xiaohongshu />}
-        {view === 'douyin' && <Douyin />}
-        {view === 'consumerism' && <Consumerism />}
-        {view === 'ismism' && <Ismism />}
-        {view === 'llm' && <LLM />}
+        {view === 'dazibao' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <Dazibao />
+          </Suspense>
+        )}
+        {view === 'television' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <Television />
+          </Suspense>
+        )}
+        {view === 'xiaohongshu' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <Xiaohongshu />
+          </Suspense>
+        )}
+        {view === 'douyin' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <Douyin />
+          </Suspense>
+        )}
+        {view === 'consumerism' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <Consumerism />
+          </Suspense>
+        )}
+        {view === 'ismism' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <Ismism />
+          </Suspense>
+        )}
+        {view === 'llm' && (
+          <Suspense fallback={<LoadingFallback />}>
+            <LLM />
+          </Suspense>
+        )}
       </main>
     </div>
   )
