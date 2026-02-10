@@ -1,4 +1,3 @@
-import React from 'react'
 import type { Lang } from '../lib/book'
 
 import './BookCover.css'
@@ -11,20 +10,26 @@ interface BookCoverProps {
 export function BookCover({ onOpen, lang }: BookCoverProps) {
   return (
     <div className="book-cover-wrap">
-      <button type="button" className="book-cover" onClick={onOpen} aria-label={lang === 'cn' ? '打开书' : 'Open book'}>
-        <div className="book-cover-spine" />
-        <div className="book-cover-face">
-          <div className="book-cover-title">
-            {lang === 'cn' ? '圣书' : 'Holy Writ'}
+      <div className="book-3d-container">
+        <button type="button" className="book-cover" onClick={onOpen} aria-label={lang === 'cn' ? '打开书' : 'Open book'}>
+          {/* 书脊 */}
+          <div className="book-cover-spine">
+            <div className="book-spine-text book-spine-top">
+              {lang === 'cn' ? '圣书' : 'HOLY WRIT'}
+            </div>
+            <div className="book-spine-text book-spine-bottom">
+              {lang === 'cn' ? '孟买' : 'MUMBAI'}
+            </div>
           </div>
-          <div className="book-cover-subtitle">
-            {lang === 'cn' ? '孟买' : 'Bombay'}
+          {/* 封面 */}
+          <div className="book-cover-face">
+            <div className="book-cover-title">
+              {lang === 'cn' ? '沙之书' : 'The Book of Sand'}
+            </div>
           </div>
-          <div className="book-cover-hint">
-            {lang === 'cn' ? '翻开' : 'Open'}
-          </div>
-        </div>
-      </button>
+
+        </button>
+      </div>
     </div>
   )
 }
