@@ -1,0 +1,70 @@
+.game-of-life-illustration {
+  margin: 1.5rem 0 0;
+  padding: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 100px;
+  position: relative;
+}
+
+.game-of-life-grid {
+  display: grid;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 6px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 280px;
+  max-height: 280px;
+  min-width: 150px;
+  min-height: 150px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.game-of-life-cell {
+  aspect-ratio: 1;
+  transition: background-color 0.1s ease;
+}
+
+.game-of-life-cell.alive {
+  background: var(--color-ink);
+  opacity: 0.9;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.game-of-life-cell.dead {
+  background: transparent;
+}
+
+/* Pixel art style */
+.game-of-life-grid {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Add subtle animation for alive cells */
+.game-of-life-cell.alive {
+  animation: cell-pulse 2s ease-in-out infinite;
+}
+
+@keyframes cell-pulse {
+  0%, 100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+/* Different patterns for variety */
+.game-of-life-illustration:nth-child(odd) .game-of-life-cell.alive {
+  background: var(--color-ink);
+}
+
+.game-of-life-illustration:nth-child(even) .game-of-life-cell.alive {
+  background: var(--color-accent);
+  opacity: 0.9;
+}

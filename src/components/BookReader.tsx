@@ -147,11 +147,27 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   const showIllustration = rawIllustrationId !== null && !seenIllustrationIds.has(rawIllustrationId);
   const illustrationAlreadySeen = rawIllustrationId !== null && seenIllustrationIds.has(rawIllustrationId);
 
+  // Debug: log illustration info
   useEffect(() => {
     if (rawIllustrationId !== null) {
-      setSeenIllustrationIds((prev) => new Set(prev).add(rawIllustrationId));
+      console.log(`[BookReader] Page ${pageIndex} has illustration ID: ${rawIllustrationId}, showing: ${showIllustration}, already seen: ${illustrationAlreadySeen}`);
     }
-  }, [pageIndex, rawIllustrationId]);
+  }, [pageIndex, rawIllustrationId, showIllustration, illustrationAlreadySeen]);
+
+  // Mark illustration as seen after it's displayed (with a delay to ensure visibility)
+  useEffect(() => {
+    if (rawIllustrationId !== null && showIllustration) {
+      // Delay marking as seen to ensure illustration is visible
+      const timer = setTimeout(() => {
+        setSeenIllustrationIds((prev) => {
+          const newSet = new Set(prev);
+          newSet.add(rawIllustrationId);
+          return newSet;
+        });
+      }, 500); // 500ms delay to ensure illustration is rendered
+      return () => clearTimeout(timer);
+    }
+  }, [pageIndex, rawIllustrationId, showIllustration]);
 
   const [flipDirection, setFlipDirection] = useState<'prev' | 'next' | null>(null);
 

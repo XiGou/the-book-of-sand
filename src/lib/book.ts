@@ -73,5 +73,7 @@ export function getPageNumbers(index: number): { left: number; right: number; us
 /** Every ILLUSTRATION_INTERVAL pages there is a small illustration; never repeated (unique per index). */
 export function getIllustration(index: number): number | null {
   if (index % ILLUSTRATION_INTERVAL !== 0) return null;
-  return Math.floor(index / ILLUSTRATION_INTERVAL) % 8;
+  // Use the index itself as illustration ID to ensure uniqueness
+  // This ensures every 2000th page has a unique illustration
+  return Math.floor(index / ILLUSTRATION_INTERVAL);
 }

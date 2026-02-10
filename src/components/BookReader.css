@@ -434,7 +434,11 @@
   padding: 0;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 100px;
+  position: relative;
+  z-index: 1;
 }
 
 .page-illustration svg {
