@@ -8,6 +8,21 @@
   align-items: center;
 }
 
+.book-reader-number-input {
+  position: fixed;
+  top: calc(var(--nav-height, 7rem) + 1rem);
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  z-index: 1000;
+  font-family: var(--pixel-font);
+  border: 2px solid var(--pixel-accent);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
 .book-reader-header {
   width: 100%;
   display: flex;

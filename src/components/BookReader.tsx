@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { getPageContent, getPageNumbers, getIllustration, formatPageNumber, type Lang } from '../lib/book'
 import { Illustration } from './Illustrations'
 import './BookReader.css'
@@ -133,6 +133,8 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   const [findingFirst, setFindingFirst] = useState(false);
   const [findingLast, setFindingLast] = useState(false);
   const [seenIllustrationIds, setSeenIllustrationIds] = useState<Set<number>>(new Set());
+  const [numberInput, setNumberInput] = useState<string>('');
+  const numberInputTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const t = LABELS[lang];
 
   const content = getPageContent(pageIndex, lang);
@@ -170,6 +172,94 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
     setFlipDirection(null);
   }, []);
 
+  // 清除数字输入
+  const clearNumberInput = useCallback(() => {
+    setNumberInput('');
+    if (numberInputTimeoutRef.current) {
+      window.clearTimeout(numberInputTimeoutRef.current);
+      numberInputTimeoutRef.current = null;
+    }
+  }, []);
+
+  // 执行翻页（支持连续翻页）
+  const performPageTurn = useCallback((direction: 'prev' | 'next', count: number = 1) => {
+    if (count <= 0) return;
+    
+    // 如果只翻一页，使用动画
+    if (count === 1) {
+      if (direction === 'next') {
+        goNext();
+      } else {
+        goPrev();
+      }
+      clearNumberInput();
+      return;
+    }
+
+    // 连续翻多页，直接更新页码（不使用动画）
+    setFlipDirection(null); // 取消动画
+    if (direction === 'next') {
+      setPageIndex((i) => i + count);
+    } else {
+      setPageIndex((i) => i - count);
+    }
+    clearNumberInput();
+  }, [goNext, goPrev, clearNumberInput]);
+
+  // 键盘事件处理
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // 忽略在输入框中的按键
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+
+      // 数字键（0-9）
+      if (e.key >= '0' && e.key <= '9') {
+        e.preventDefault();
+        const newInput = numberInput + e.key;
+        // 允许输入更多位数，限制最大翻页数为999999（足够大）
+        const num = parseInt(newInput, 10);
+        if (num <= 999999 && newInput.length <= 10) {
+          setNumberInput(newInput);
+          // 清除之前的超时
+          if (numberInputTimeoutRef.current) {
+            window.clearTimeout(numberInputTimeoutRef.current);
+          }
+          // 2秒后自动清除数字输入
+          numberInputTimeoutRef.current = window.setTimeout(() => {
+            setNumberInput('');
+          }, 2000);
+        }
+        return;
+      }
+
+      // 左右箭头键
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        const count = numberInput ? parseInt(numberInput, 10) || 1 : 1;
+        const direction = e.key === 'ArrowLeft' ? 'prev' : 'next';
+        performPageTurn(direction, count);
+        return;
+      }
+
+      // Escape 键清除数字输入
+      if (e.key === 'Escape') {
+        clearNumberInput();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (numberInputTimeoutRef.current) {
+        window.clearTimeout(numberInputTimeoutRef.current);
+        numberInputTimeoutRef.current = null;
+      }
+    };
+  }, [numberInput, performPageTurn, clearNumberInput]);
+
   const findFirstPage = useCallback(() => {
     setFindingFirst(true);
     let step = 0;
@@ -205,6 +295,11 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
 
   return (
     <div className="book-reader" data-lang={lang}>
+      {numberInput && (
+        <div className="book-reader-number-input">
+          翻页数: {numberInput} (按 ← → 执行)
+        </div>
+      )}
       <header className="book-reader-header">
         <button type="button" className="btn btn-close" onClick={onClose} aria-label="Close">
           ×
