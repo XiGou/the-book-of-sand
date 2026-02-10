@@ -130,11 +130,25 @@ function NewsText({ text }: { text: string }) {
 export function Douyin() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [containerHeight, setContainerHeight] = useState(0)
   const [videos, setVideos] = useState<VideoContent[]>(() => {
     return Array.from({ length: 3 }, (_, i) => generateVideoContent(i))
   })
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
+
+  // 监听容器高度变化
+  useEffect(() => {
+    const updateHeight = () => {
+      if (containerRef.current) {
+        setContainerHeight(containerRef.current.clientHeight)
+      }
+    }
+    
+    updateHeight()
+    window.addEventListener('resize', updateHeight)
+    return () => window.removeEventListener('resize', updateHeight)
+  }, [])
 
   const formatCount = (count: number): string => {
     if (count >= 10000) {
@@ -208,22 +222,25 @@ export function Douyin() {
   }, [changeVideo])
 
   // 使用useMemo缓存transform值，避免每次渲染都重新计算
-  // 每个item高度固定为容器高度，wrapper高度自动为videos.length * item高度
-  // transform相对于wrapper自身，移动currentIndex个item = currentIndex * item高度
-  // 由于wrapper高度是videos.length * item高度，所以移动百分比是 currentIndex / videos.length * 100%
+  // wrapper高度是videos.length * containerHeight（像素值）
+  // 每个item高度是containerHeight（calc(100vh - var(--nav-height, 7rem))）
+  // transform移动currentIndex个item = currentIndex * containerHeight
   const wrapperStyle = useMemo(() => {
-    const containerHeight = containerRef.current?.clientHeight || 0
-    if (containerHeight > 0) {
-      // 使用像素值确保精确
+    if (containerHeight > 0 && videos.length > 0) {
+      // 使用像素值：wrapper总高度是videos.length * containerHeight
+      // 每个item高度是containerHeight
+      // 移动currentIndex个item = currentIndex * containerHeight
       return {
+        height: `${videos.length * containerHeight}px`,
         transform: `translateY(-${currentIndex * containerHeight}px)`,
       }
     }
-    // 如果container高度还未计算，使用百分比
+    // 如果container高度还未计算，使用百分比作为fallback
     return {
+      height: `${videos.length * 100}%`,
       transform: `translateY(calc(-${currentIndex} * 100% / ${videos.length}))`,
     }
-  }, [currentIndex, videos.length])
+  }, [currentIndex, videos.length, containerHeight])
 
   return (
     <div className="douyin-container" ref={containerRef}>

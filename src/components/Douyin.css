@@ -4,7 +4,10 @@
   overflow: hidden;
   background: #000;
   font-family: var(--pixel-font);
-  position: relative;
+  position: fixed;
+  top: var(--nav-height, 7rem);
+  left: 0;
+  right: 0;
 }
 
 .douyin-video-wrapper {
@@ -32,6 +35,7 @@
   justify-content: center;
   position: relative;
   min-height: 0;
+  isolation: isolate; /* 创建新的堆叠上下文，确保子元素定位正确 */
 }
 
 .douyin-video-content {
@@ -42,7 +46,9 @@
   background: #1a1a1a;
   border: 2px solid var(--pixel-accent);
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
+  overflow: hidden; /* 保持hidden，但确保绝对定位的子元素正确显示 */
+  z-index: 1;
+  isolation: isolate; /* 创建新的堆叠上下文，确保子元素定位正确 */
 }
 
 /* 彩色像素背景 */
@@ -154,8 +160,10 @@
   font-weight: bold;
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 5;
+  z-index: 10;
   pointer-events: none;
+  width: auto;
+  white-space: nowrap;
 }
 
 .video-description {
@@ -171,7 +179,7 @@
   font-weight: 500;
   text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  z-index: 6;
+  z-index: 10;
   max-width: 90%;
   text-align: center;
   line-height: 1.4;
