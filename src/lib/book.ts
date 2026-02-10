@@ -5,7 +5,18 @@
  * Page numbers follow the story: (40514, 999), then eight digits, occasionally "n^9".
  */
 
-import { chunksEn, chunksCn } from '../data/chunks';
+import {
+  chunksEn,
+  chunksCn,
+  chunksEs,
+  chunksJa,
+  chunksPt,
+  chunksFr,
+  chunksDe,
+  chunksHi,
+  chunksLa,
+  chunksEl,
+} from '../data/chunks';
 
 const ILLUSTRATION_INTERVAL = 2000;
 const SEED = 40514;
@@ -31,10 +42,23 @@ export function formatPageNumber(n: number, usePower: boolean = false): string {
   return n.toLocaleString('en-US', { useGrouping: true });
 }
 
-export type Lang = 'en' | 'cn';
+export type Lang = 'en' | 'cn' | 'es' | 'ja' | 'pt' | 'fr' | 'de' | 'hi' | 'la' | 'el';
+
+const CHUNKS_MAP: Record<Lang, readonly string[]> = {
+  en: chunksEn,
+  cn: chunksCn,
+  es: chunksEs,
+  ja: chunksJa,
+  pt: chunksPt,
+  fr: chunksFr,
+  de: chunksDe,
+  hi: chunksHi,
+  la: chunksLa,
+  el: chunksEl,
+};
 
 export function getPageContent(index: number, lang: Lang): string {
-  const chunks = lang === 'en' ? chunksEn : chunksCn;
+  const chunks = CHUNKS_MAP[lang];
   const i = ((index % chunks.length) + chunks.length) % chunks.length;
   return chunks[i];
 }

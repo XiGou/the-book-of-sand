@@ -1,7 +1,9 @@
-import { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { getPageContent, getPageNumbers, getIllustration, formatPageNumber, type Lang } from '../lib/book'
 import { Illustration } from './Illustrations'
 import './BookReader.css'
+
+const ALL_LANGS: Lang[] = ['en', 'cn', 'es', 'ja', 'pt', 'fr', 'de', 'hi', 'la', 'el'];
 
 interface BookReaderProps {
   initialPageIndex: number
@@ -31,7 +33,100 @@ const LABELS = {
     noLast: '没有最后一页。',
     illustrationGone: '［以后再也看不到了。］',
   },
+  es: {
+    prev: 'Anterior',
+    next: 'Siguiente',
+    findFirst: 'Buscar primera página',
+    findLast: 'Buscar última página',
+    slip: 'Las páginas se deslizan entre la portada y el pulgar…',
+    noFirst: 'No hay primera página.',
+    noLast: 'No hay última página.',
+    illustrationGone: '[Ya no la verás nunca más.]',
+  },
+  ja: {
+    prev: '前へ',
+    next: '次へ',
+    findFirst: '最初の頁を探す',
+    findLast: '最後の頁を探す',
+    slip: '表紙と指の間にはいつも何頁か挟まっていて、本から湧き出してくるようだった……',
+    noFirst: '最初の頁はない。',
+    noLast: '最後の頁はない。',
+    illustrationGone: '［二度と見られませんから。］',
+  },
+  pt: {
+    prev: 'Anterior',
+    next: 'Próxima',
+    findFirst: 'Encontrar primeira página',
+    findLast: 'Encontrar última página',
+    slip: 'As páginas deslizam entre a capa e o polegar…',
+    noFirst: 'Não há primeira página.',
+    noLast: 'Não há última página.',
+    illustrationGone: '[Nunca mais a verás.]',
+  },
+  fr: {
+    prev: 'Précédent',
+    next: 'Suivant',
+    findFirst: 'Trouver la première page',
+    findLast: 'Trouver la dernière page',
+    slip: 'Les feuilles glissent entre la couverture et le pouce…',
+    noFirst: 'Il n\'y a pas de première page.',
+    noLast: 'Il n\'y a pas de dernière page.',
+    illustrationGone: '[Vous ne la reverrez jamais plus.]',
+  },
+  de: {
+    prev: 'Zurück',
+    next: 'Weiter',
+    findFirst: 'Erste Seite finden',
+    findLast: 'Letzte Seite finden',
+    slip: 'Blätter schieben sich zwischen Einband und Daumen…',
+    noFirst: 'Es gibt keine erste Seite.',
+    noLast: 'Es gibt keine letzte Seite.',
+    illustrationGone: '[Sie werden sie nie wieder sehen.]',
+  },
+  hi: {
+    prev: 'पिछला',
+    next: 'अगला',
+    findFirst: 'पहला पन्ना ढूँढें',
+    findLast: 'आख़िरी पन्ना ढूँढें',
+    slip: 'मुखपृष्ठ और अँगूठे के बीच हमेशा कई पन्ने आ जाते……',
+    noFirst: 'पहला पन्ना नहीं है।',
+    noLast: 'आख़िरी पन्ना नहीं है।',
+    illustrationGone: '［फिर कभी नहीं देख पाएँगे।］',
+  },
+  la: {
+    prev: 'Prior',
+    next: 'Sequens',
+    findFirst: 'Primam paginam quaerere',
+    findLast: 'Ultimam paginam quaerere',
+    slip: 'Paginae inter tegumentum et pollicem labuntur…',
+    noFirst: 'Prima pagina non est.',
+    noLast: 'Ultima pagina non est.',
+    illustrationGone: '[Numquam eam iterum videbis.]',
+  },
+  el: {
+    prev: 'Προηγούμενη',
+    next: 'Επόμενη',
+    findFirst: 'Βρείτε την πρώτη σελίδα',
+    findLast: 'Βρείτε την τελευταία σελίδα',
+    slip: 'Οι σελίδες γλιστρούν ανάμεσα στο εξώφυλλο και τον αντίχειρα…',
+    noFirst: 'Δεν υπάρχει πρώτη σελίδα.',
+    noLast: 'Δεν υπάρχει τελευταία σελίδα.',
+    illustrationGone: '[Δεν θα την ξαναδείτε ποτέ.]',
+  },
 } as const;
+
+const LANG_NAMES: Record<Lang, string> = {
+  en: 'EN',
+  cn: '中文',
+  es: 'ES',
+  ja: '日本語',
+  pt: 'PT',
+  fr: 'FR',
+  de: 'DE',
+  hi: 'हिन्दी',
+  la: 'LA',
+  el: 'ΕΛ',
+};
 
 export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: BookReaderProps) {
   const [pageIndex, setPageIndex] = useState(initialPageIndex);
@@ -102,21 +197,18 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
           ×
         </button>
         <div className="book-reader-lang">
-          <button
-            type="button"
-            className={lang === 'cn' ? 'active' : ''}
-            onClick={() => onLangChange('cn')}
-          >
-            中文
-          </button>
-          <span className="sep">/</span>
-          <button
-            type="button"
-            className={lang === 'en' ? 'active' : ''}
-            onClick={() => onLangChange('en')}
-          >
-            EN
-          </button>
+          {ALL_LANGS.map((l, i) => (
+            <React.Fragment key={l}>
+              {i > 0 && <span className="sep">/</span>}
+              <button
+                type="button"
+                className={lang === l ? 'active' : ''}
+                onClick={() => onLangChange(l)}
+              >
+                {LANG_NAMES[l]}
+              </button>
+            </React.Fragment>
+          ))}
         </div>
       </header>
 
@@ -127,7 +219,15 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
         <div className="book-reader-spread">
           <div className="page page-left">
             <div className="page-number page-number-left">{leftNum}</div>
-            <div className="page-content" style={{ fontFamily: lang === 'cn' ? 'var(--font-serif-cn)' : undefined }}>
+            <div
+              className="page-content"
+              style={{
+                fontFamily:
+                  lang === 'cn' || lang === 'ja' || lang === 'hi'
+                    ? 'var(--font-serif-cn)'
+                    : undefined,
+              }}
+            >
               {content}
             </div>
             {showIllustration && <Illustration id={rawIllustrationId!} />}
