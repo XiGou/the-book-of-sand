@@ -52,11 +52,15 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
     }
   }, [pageIndex, rawIllustrationId]);
 
+  const [flipDirection, setFlipDirection] = useState<'prev' | 'next' | null>(null);
+
   const goPrev = useCallback(() => {
+    setFlipDirection('prev');
     setPageIndex((i) => i - 1);
   }, []);
 
   const goNext = useCallback(() => {
+    setFlipDirection('next');
     setPageIndex((i) => i + 1);
   }, []);
 
@@ -116,19 +120,24 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
         </div>
       </header>
 
-      <div className="book-reader-spread">
-        <div className="page page-left">
-          <div className="page-number page-number-left">{leftNum}</div>
-          <div className="page-content" style={{ fontFamily: lang === 'cn' ? 'var(--font-serif-cn)' : undefined }}>
-            {content}
+      <div
+        className={`book-reader-spread-outer ${flipDirection ? `turn-${flipDirection}` : ''}`}
+        onAnimationEnd={() => setFlipDirection(null)}
+      >
+        <div className="book-reader-spread">
+          <div className="page page-left">
+            <div className="page-number page-number-left">{leftNum}</div>
+            <div className="page-content" style={{ fontFamily: lang === 'cn' ? 'var(--font-serif-cn)' : undefined }}>
+              {content}
+            </div>
+            {showIllustration && <Illustration id={rawIllustrationId!} />}
+            {illustrationAlreadySeen && (
+              <p className="page-illustration-gone">{t.illustrationGone}</p>
+            )}
           </div>
-          {showIllustration && <Illustration id={rawIllustrationId!} />}
-          {illustrationAlreadySeen && (
-            <p className="page-illustration-gone">{t.illustrationGone}</p>
-          )}
-        </div>
-        <div className="page page-right">
-          <div className="page-number page-number-right">{rightNum}</div>
+          <div className="page page-right">
+            <div className="page-number page-number-right">{rightNum}</div>
+          </div>
         </div>
       </div>
 

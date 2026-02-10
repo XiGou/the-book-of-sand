@@ -40,6 +40,7 @@ html, body {
   flex-direction: column;
 }
 
+/* A5: 148×210 (single), spread 296×210 */
 .app-main {
   flex: 1;
   padding-top: 3.25rem;
@@ -48,8 +49,16 @@ html, body {
   align-items: center;
   justify-content: center;
   min-height: calc(100vh - 3.25rem);
+  max-height: calc(100vh - 3.25rem);
+}
+
+.app-main.app-main-no-scroll {
+  overflow: hidden;
 }
 
 .app-main .book-reader {
   padding-top: 0.5rem;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }

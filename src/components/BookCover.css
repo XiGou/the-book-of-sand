@@ -1,15 +1,21 @@
+/* A5 single page: 148/210 */
 .book-cover-wrap {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
 }
 
 .book-cover {
   position: relative;
-  width: 320px;
-  height: 420px;
+  height: min(calc((100vh - 3.25rem) * 0.72), 75vh);
+  width: auto;
+  aspect-ratio: 148 / 210;
+  max-width: 100%;
   border: none;
   cursor: pointer;
   background: transparent;
@@ -35,7 +41,7 @@
   bottom: 0;
   width: 24px;
   background: linear-gradient(90deg, #1a1612 0%, var(--color-spine) 30%, #3d3529 50%, var(--color-spine) 70%, #1a1612 100%);
-  border-radius: 2px 0 0 2px;
+  border-radius: 0;
   box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
 }
 
@@ -43,7 +49,7 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(145deg, #c4b8a8 0%, #a89888 50%, #8a7c6e 100%);
-  border-radius: 2px 4px 4px 2px;
+  border-radius: 0;
   box-shadow:
     2px 2px 0 rgba(0,0,0,0.1),
     6px 6px 20px rgba(0,0,0,0.3),

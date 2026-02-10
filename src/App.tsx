@@ -15,7 +15,7 @@ function App() {
   return (
     <div className="app-layout">
       <Nav currentView={view} onNavigate={setView} lang={lang} />
-      <main className="app-main">
+      <main className={`app-main ${view !== 'about' ? 'app-main-no-scroll' : ''}`}>
         {view === 'cover' && <BookCover onOpen={openBook} lang={lang} />}
         {view === 'about' && <About lang={lang} />}
         {view === 'reader' && (
