@@ -3,3 +3,6 @@ dist
 *.local
 .DS_Store
 tsconfig.tsbuildinfo
+
+# Font files (optional - uncomment if you don't want to commit font files)
+# public/fonts/*.woff2
