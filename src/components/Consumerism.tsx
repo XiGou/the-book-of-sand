@@ -3,29 +3,44 @@ import { ContentGenerator } from '../lib/contentGenerator'
 import { consumerismResources } from '../data/resources'
 import './Consumerism.css'
 
+interface AdSlogan {
+  text: string
+  fontSize: string
+  fontWeight: string
+  rotation: number
+  top: string
+  left: string
+}
+
 interface ProductContent {
   id: number
   name: string
-  category: string
+  product: string
   brand: string
+  emoji: string
   originalPrice: number
   currentPrice: number
   discount: number
   rating: number
   reviewCount: number
   tag: string | null
+  adSlogans: AdSlogan[]
 }
 
 function generateProduct(seed: number): ProductContent {
   const gen = new ContentGenerator(seed)
-  const category = gen.selectFrom(consumerismResources.categories)
+  
+  // 选择商品和品牌
+  const product = gen.selectFrom(consumerismResources.products)
   const brand = gen.selectFrom(consumerismResources.brands)
-  const model = gen.selectFrom(consumerismResources.models)
-  const feature = gen.selectFrom(consumerismResources.features)
-  const template = gen.selectFrom(consumerismResources.productTemplates)
   
-  const name = gen.generateText(template, { brand, category, model, feature })
+  // 标题：品牌 + 商品
+  const name = `${brand} ${product}`
   
+  // 获取商品对应的emoji
+  const emoji = consumerismResources.productEmojis[product] || '📦'
+  
+  // 生成价格
   const priceRange = gen.selectFrom(consumerismResources.priceRanges)
   const originalPrice = Math.floor(
     gen.getRandom().nextFloat(priceRange.min, priceRange.max)
@@ -34,6 +49,7 @@ function generateProduct(seed: number): ProductContent {
   const discount = hasDiscount ? gen.getRandom().nextFloat(0.1, 0.5) : 0
   const currentPrice = Math.floor(originalPrice * (1 - discount))
   
+  // 生成评分
   const rating = parseFloat(
     gen.getRandom().nextFloat(
       consumerismResources.ratingRange.min,
@@ -41,6 +57,7 @@ function generateProduct(seed: number): ProductContent {
     ).toFixed(1)
   )
   
+  // 生成评论数
   const reviewCount = Math.floor(
     gen.getRandom().nextFloat(
       consumerismResources.reviewCountRange.min,
@@ -48,21 +65,45 @@ function generateProduct(seed: number): ProductContent {
     )
   )
   
+  // 生成标签
   const tag = gen.getRandom().next() < 0.4 
     ? gen.selectFrom(consumerismResources.tags) 
     : null
   
+  // 生成广告词（2-4条）
+  const adCount = gen.getRandom().nextInt(2, 4)
+  const adSlogans: AdSlogan[] = []
+  for (let i = 0; i < adCount; i++) {
+    const sloganText = gen.selectFrom(consumerismResources.adSlogans)
+    const fontSize = gen.selectFrom(consumerismResources.adFontSizes)
+    const fontWeight = gen.selectFrom(consumerismResources.adFontWeights)
+    const rotation = gen.getRandom().nextFloat(-15, 15) // 随机角度
+    const top = `${gen.getRandom().nextFloat(10, 90)}%` // 随机位置
+    const left = `${gen.getRandom().nextFloat(5, 95)}%`
+    
+    adSlogans.push({
+      text: sloganText,
+      fontSize,
+      fontWeight,
+      rotation,
+      top,
+      left,
+    })
+  }
+  
   return {
     id: seed,
     name,
-    category,
+    product,
     brand,
+    emoji,
     originalPrice,
     currentPrice,
     discount: discount > 0 ? Math.floor(discount * 100) : 0,
     rating,
     reviewCount,
     tag,
+    adSlogans,
   }
 }
 
@@ -132,7 +173,23 @@ export function Consumerism() {
                 background: `linear-gradient(135deg, ${getRandomColor(product.id)}, ${getRandomColor(product.id + 100)})`,
               }}
             >
-              <div className="image-placeholder">{product.brand[0]}</div>
+              <div className="product-emoji">{product.emoji}</div>
+              {/* 广告词 */}
+              {product.adSlogans.map((ad, index) => (
+                <div
+                  key={index}
+                  className="ad-slogan"
+                  style={{
+                    fontSize: ad.fontSize,
+                    fontWeight: ad.fontWeight,
+                    transform: `rotate(${ad.rotation}deg)`,
+                    top: ad.top,
+                    left: ad.left,
+                  }}
+                >
+                  {ad.text}
+                </div>
+              ))}
             </div>
             <div className="product-info">
               <h3 className="product-name">{product.name}</h3>
