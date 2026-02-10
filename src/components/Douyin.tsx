@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
 import { ContentGenerator } from '../lib/contentGenerator'
-import { douyinResources } from '../data/resources'
+import { douyinResources } from '../data/douyin'
 import './Douyin.css'
 
 interface VideoContent {
@@ -131,11 +131,32 @@ export function Douyin() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   const [containerHeight, setContainerHeight] = useState(0)
-  const [videos, setVideos] = useState<VideoContent[]>(() => {
-    return Array.from({ length: 3 }, (_, i) => generateVideoContent(i))
-  })
   const containerRef = useRef<HTMLDivElement>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  // 存储每个索引对应的随机seed，确保每次前进时随机，返回时保持一致
+  const seedCacheRef = useRef<Map<number, number>>(new Map())
+  
+  // 获取或生成当前索引的随机seed
+  const getSeedForIndex = useCallback((index: number): number => {
+    if (!seedCacheRef.current.has(index)) {
+      // 生成一个完全随机的seed（使用大范围的随机数）
+      const randomSeed = Math.floor(Math.random() * 1000000000) + index * 7919
+      seedCacheRef.current.set(index, randomSeed)
+    }
+    return seedCacheRef.current.get(index)!
+  }, [])
+  
+  // 使用缓存的seed生成视频内容
+  // 预加载当前索引前后各5个视频，确保有足够的视频可以滚动
+  const videos = useMemo(() => {
+    const startIndex = Math.max(0, currentIndex - 5)
+    const endIndex = currentIndex + 10 // 预加载当前索引后10个视频
+    return Array.from({ length: endIndex - startIndex }, (_, i) => {
+      const videoIndex = startIndex + i
+      const seed = getSeedForIndex(videoIndex)
+      return generateVideoContent(seed)
+    })
+  }, [currentIndex, getSeedForIndex])
 
   // 监听容器高度变化
   useEffect(() => {
@@ -168,18 +189,6 @@ export function Douyin() {
     requestAnimationFrame(() => {
       setCurrentIndex(prev => {
         const newIndex = direction === 'next' ? prev + 1 : Math.max(0, prev - 1)
-        
-        // 预加载更多视频（当接近末尾时）
-        setVideos(currentVideos => {
-          if (newIndex >= currentVideos.length - 2) {
-            const newVideos = Array.from({ length: 3 }, (_, i) => 
-              generateVideoContent(currentVideos.length + i)
-            )
-            return [...currentVideos, ...newVideos]
-          }
-          return currentVideos
-        })
-        
         return newIndex
       })
       
@@ -227,18 +236,23 @@ export function Douyin() {
   // transform移动currentIndex个item = currentIndex * containerHeight
   const wrapperStyle = useMemo(() => {
     if (containerHeight > 0 && videos.length > 0) {
+      // 计算当前视频在videos数组中的偏移位置
+      const startIndex = Math.max(0, currentIndex - 5)
+      const offsetIndex = currentIndex - startIndex
       // 使用像素值：wrapper总高度是videos.length * containerHeight
       // 每个item高度是containerHeight
-      // 移动currentIndex个item = currentIndex * containerHeight
+      // 移动offsetIndex个item = offsetIndex * containerHeight
       return {
         height: `${videos.length * containerHeight}px`,
-        transform: `translateY(-${currentIndex * containerHeight}px)`,
+        transform: `translateY(-${offsetIndex * containerHeight}px)`,
       }
     }
     // 如果container高度还未计算，使用百分比作为fallback
+    const startIndex = Math.max(0, currentIndex - 5)
+    const offsetIndex = currentIndex - startIndex
     return {
       height: `${videos.length * 100}%`,
-      transform: `translateY(calc(-${currentIndex} * 100% / ${videos.length}))`,
+      transform: `translateY(calc(-${offsetIndex} * 100% / ${videos.length}))`,
     }
   }, [currentIndex, videos.length, containerHeight])
 
