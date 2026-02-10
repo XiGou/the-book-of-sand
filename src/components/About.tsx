@@ -5,7 +5,6 @@ import './About.css'
 
 interface AboutProps {
   lang: Lang
-  onBack: () => void
 }
 
 const content = {
@@ -53,7 +52,7 @@ const content = {
   },
 } as const
 
-export function About({ lang, onBack }: AboutProps) {
+export function About({ lang }: AboutProps) {
   const t = content[lang]
 
   return (
@@ -61,9 +60,6 @@ export function About({ lang, onBack }: AboutProps) {
       <header className="about-header">
         <h1 className="about-title">{t.title}</h1>
         <p className="about-intro">{t.intro}</p>
-        <button type="button" className="about-back" onClick={onBack} aria-label={t.back}>
-          {t.back}
-        </button>
       </header>
 
       <main className="about-main">

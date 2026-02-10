@@ -2,42 +2,33 @@ import { useState } from 'react'
 import { About } from './components/About'
 import { BookCover } from './components/BookCover'
 import { BookReader } from './components/BookReader'
+import { Nav, type View } from './components/Nav'
 import type { Lang } from './lib/book'
-
-type View = 'cover' | 'reader' | 'about'
 
 function App() {
   const [view, setView] = useState<View>('cover')
   const [lang, setLang] = useState<Lang>('cn')
 
   const openBook = () => setView('reader')
-  const openAbout = () => setView('about')
-  const backToCover = () => setView('cover')
-
-  if (view === 'cover') {
-    return (
-      <div className="app-fullscreen">
-        <BookCover onOpen={openBook} onAbout={openAbout} lang={lang} />
-      </div>
-    )
-  }
-
-  if (view === 'about') {
-    return (
-      <div className="app-fullscreen">
-        <About lang={lang} onBack={backToCover} />
-      </div>
-    )
-  }
+  const goToCover = () => setView('cover')
 
   return (
-    <BookReader
-      initialPageIndex={0}
-      lang={lang}
-      onLangChange={setLang}
-      onClose={backToCover}
-    />
-  );
+    <div className="app-layout">
+      <Nav currentView={view} onNavigate={setView} lang={lang} />
+      <main className="app-main">
+        {view === 'cover' && <BookCover onOpen={openBook} lang={lang} />}
+        {view === 'about' && <About lang={lang} />}
+        {view === 'reader' && (
+          <BookReader
+            initialPageIndex={0}
+            lang={lang}
+            onLangChange={setLang}
+            onClose={goToCover}
+          />
+        )}
+      </main>
+    </div>
+  )
 }
 
 export default App;

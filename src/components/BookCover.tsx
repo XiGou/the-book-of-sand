@@ -5,17 +5,10 @@ import './BookCover.css'
 
 interface BookCoverProps {
   onOpen: () => void
-  onAbout: () => void
   lang: Lang
 }
 
-export function BookCover({ onOpen, onAbout, lang }: BookCoverProps) {
-  const handleAboutClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    onAbout()
-  }
-
+export function BookCover({ onOpen, lang }: BookCoverProps) {
   return (
     <div className="book-cover-wrap">
       <button type="button" className="book-cover" onClick={onOpen} aria-label={lang === 'cn' ? '打开书' : 'Open book'}>
@@ -31,9 +24,6 @@ export function BookCover({ onOpen, onAbout, lang }: BookCoverProps) {
             {lang === 'cn' ? '翻开' : 'Open'}
           </div>
         </div>
-      </button>
-      <button type="button" className="book-cover-about" onClick={handleAboutClick} aria-label={lang === 'cn' ? '关于沙之书' : 'About The Book of Sand'}>
-        {lang === 'cn' ? '关于' : 'About'}
       </button>
     </div>
   )
