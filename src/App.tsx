@@ -8,6 +8,7 @@ import { Television } from './components/Television'
 import { Xiaohongshu } from './components/Xiaohongshu'
 import { Douyin } from './components/Douyin'
 import { Consumerism } from './components/Consumerism'
+import { Ismism } from './components/Ismism'
 import type { Lang } from './lib/book'
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
   const openBook = () => setView('reader')
   const goToCover = () => setView('cover')
 
-  const isVariationPage = ['dazibao', 'television', 'xiaohongshu', 'douyin', 'consumerism'].includes(view)
+  const isVariationPage = ['dazibao', 'television', 'xiaohongshu', 'douyin', 'consumerism', 'ismism'].includes(view)
 
   return (
     <div className="app-layout">
@@ -38,6 +39,7 @@ function App() {
         {view === 'xiaohongshu' && <Xiaohongshu />}
         {view === 'douyin' && <Douyin />}
         {view === 'consumerism' && <Consumerism />}
+        {view === 'ismism' && <Ismism />}
       </main>
     </div>
   )

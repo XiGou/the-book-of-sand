@@ -1,0 +1,127 @@
+.ismism-container {
+  width: 100%;
+  min-height: calc(100vh - var(--nav-height, 7rem));
+  padding: 2rem;
+  background: var(--pixel-bg);
+  font-family: var(--pixel-font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ismism-card {
+  background: var(--pixel-paper);
+  border: 3px solid var(--pixel-ink);
+  box-shadow: var(--pixel-shadow);
+  padding: 3rem;
+  max-width: 800px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.ismism-category {
+  font-size: 0.9rem;
+  color: var(--pixel-ink);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.ismism-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--pixel-ink);
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+  border-bottom: 2px solid var(--pixel-ink);
+  padding-bottom: 1rem;
+}
+
+.ismism-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--pixel-ink);
+  margin: 0;
+  text-align: left;
+  padding: 1rem 0;
+  min-height: 4rem;
+}
+
+.ismism-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ismism-button {
+  background: var(--pixel-paper);
+  border: 2px solid var(--pixel-ink);
+  color: var(--pixel-ink);
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--pixel-font);
+  cursor: pointer;
+  transition: all 0.1s;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.ismism-button:hover {
+  background: var(--pixel-ink);
+  color: var(--pixel-paper);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+}
+
+.ismism-button:active {
+  transform: translate(0, 0);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.ismism-counter {
+  font-size: 0.9rem;
+  color: var(--pixel-ink);
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.ismism-hint {
+  font-size: 0.8rem;
+  color: var(--pixel-ink);
+  opacity: 0.5;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .ismism-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .ismism-title {
+    font-size: 2rem;
+  }
+
+  .ismism-description {
+    font-size: 1rem;
+  }
+
+  .ismism-navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .ismism-button {
+    width: 100%;
+  }
+}

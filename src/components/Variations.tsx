@@ -94,6 +94,21 @@ export const VARIATIONS = [
       el: 'Καταναλωτισμός',
     } 
   },
+  { 
+    id: 'ismism', 
+    name: { 
+      cn: '主义主义', 
+      en: 'Ismism',
+      es: 'Ismismo',
+      ja: '主義主義',
+      pt: 'Ismismo',
+      fr: 'Ismisme',
+      de: 'Ismismus',
+      hi: 'वादवाद',
+      la: 'Ismismus',
+      el: 'Ισμισμός',
+    } 
+  },
 ] as const
 
 export type VariationId = typeof VARIATIONS[number]['id']
