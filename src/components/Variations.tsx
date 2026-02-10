@@ -109,6 +109,21 @@ export const VARIATIONS = [
       el: 'Ισμισμός',
     } 
   },
+  { 
+    id: 'llm', 
+    name: { 
+      cn: '大语言模型', 
+      en: 'Large Language Model',
+      es: 'Modelo de Lenguaje Grande',
+      ja: '大規模言語モデル',
+      pt: 'Modelo de Linguagem Grande',
+      fr: 'Grand Modèle de Langage',
+      de: 'Großes Sprachmodell',
+      hi: 'बड़ा भाषा मॉडल',
+      la: 'Magnum Exemplar Linguae',
+      el: 'Μεγάλο Γλωσσικό Μοντέλο',
+    } 
+  },
 ] as const
 
 export type VariationId = typeof VARIATIONS[number]['id']
