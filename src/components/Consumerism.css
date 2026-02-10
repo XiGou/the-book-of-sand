@@ -1,0 +1,163 @@
+.consumerism-container {
+  width: 100%;
+  min-height: calc(100vh - var(--nav-height, 7rem));
+  padding: 2rem;
+  background: var(--pixel-bg);
+  font-family: var(--pixel-font);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.product-card {
+  background: var(--pixel-paper);
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: var(--pixel-shadow);
+  border: 2px solid var(--pixel-ink);
+  transition: transform 0.1s, box-shadow 0.1s;
+  cursor: pointer;
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.3);
+}
+
+.product-image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.image-placeholder {
+  font-size: 3rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.product-tag {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: var(--pixel-red);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 1;
+  border: 2px solid var(--pixel-ink);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.product-info {
+  padding: 1rem;
+}
+
+.product-name {
+  font-size: 0.9rem;
+  margin: 0 0 0.5rem;
+  color: var(--pixel-ink);
+  font-weight: bold;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.current-price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--pixel-red);
+}
+
+.original-price {
+  font-size: 0.9rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.discount-badge {
+  background: var(--pixel-red);
+  color: white;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--pixel-ink);
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  width: 14px;
+  height: 14px;
+  background: #ddd;
+  clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%,
+    79% 91%, 50% 70%, 21% 91%, 32% 57%,
+    2% 35%, 39% 35%
+  );
+}
+
+.star.filled {
+  background: #ffc107;
+}
+
+.star.half {
+  background: linear-gradient(to right, #ffc107 50%, #ddd 50%);
+}
+
+.rating-value {
+  font-weight: bold;
+  color: var(--pixel-ink);
+}
+
+.review-count {
+  color: #999;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .consumerism-container {
+    padding: 1rem;
+  }
+}

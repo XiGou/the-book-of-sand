@@ -1,4 +1,5 @@
 @import './fonts.css';
+@import './styles/pixel.css';
 
 :root {
   --color-paper: #f4f0e8;

@@ -1,0 +1,62 @@
+.dazibao-container {
+  width: 100%;
+  min-height: calc(100vh - var(--nav-height, 7rem));
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  background: #f5f5dc;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  font-family: var(--pixel-font);
+}
+
+.dazibao-item {
+  position: relative;
+  padding: 3rem 2rem;
+  background: white;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 0 20px rgba(0, 0, 0, 0.05);
+  border: 3px solid var(--pixel-ink);
+  break-inside: avoid;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dazibao-text {
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform-origin: center;
+  text-shadow: 
+    2px 2px 0 rgba(0, 0, 0, 0.2),
+    -1px -1px 0 rgba(255, 255, 255, 0.1);
+  word-break: break-word;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .dazibao-container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+  
+  .dazibao-item {
+    padding: 2rem 1rem;
+  }
+  
+  .dazibao-text {
+    font-size: 2rem !important;
+  }
+}

@@ -1,0 +1,82 @@
+/**
+ * 像素风样式
+ * 与整体网页配色保持一致
+ */
+
+:root {
+  /* 像素风配色（基于现有配色调整） */
+  --pixel-bg: #1a1814;
+  --pixel-paper: #f4f0e8;
+  --pixel-ink: #1a1a1a;
+  --pixel-accent: #6b5344;
+  --pixel-red: #e63946;
+  --pixel-dark-red: #8b0000;
+  
+  /* 像素风字体 */
+  --pixel-font: 'Courier New', 'Monaco', 'Menlo', monospace;
+  
+  /* 像素风效果 */
+  --pixel-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  --pixel-border: 2px solid var(--pixel-ink);
+}
+
+/* 像素风通用类 */
+.pixel-text {
+  font-family: var(--pixel-font);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixel-border {
+  border: var(--pixel-border);
+  box-shadow: var(--pixel-shadow);
+}
+
+.pixel-button {
+  font-family: var(--pixel-font);
+  border: var(--pixel-border);
+  background: var(--pixel-paper);
+  color: var(--pixel-ink);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: transform 0.1s;
+  box-shadow: var(--pixel-shadow);
+}
+
+.pixel-button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.pixel-button:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* 像素风动画 */
+@keyframes pixel-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes pixel-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.pixel-flicker {
+  animation: pixel-flicker 0.1s infinite;
+}
+
+/* 像素风背景图案 */
+.pixel-bg-pattern {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+}

@@ -1,0 +1,183 @@
+.television-container {
+  width: 100%;
+  min-height: calc(100vh - var(--nav-height, 7rem));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--pixel-bg);
+  color: var(--pixel-paper);
+  font-family: var(--pixel-font);
+}
+
+.television-screen {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 4px solid var(--pixel-ink);
+  box-shadow: 
+    0 0 0 8px var(--pixel-accent),
+    0 0 20px rgba(0, 0, 0, 0.5),
+    inset 0 0 50px rgba(0, 0, 0, 0.8);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.tv-content {
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 24, 20, 0.95) 0%,
+    rgba(44, 36, 25, 0.95) 100%
+  );
+  transition: opacity 0.3s ease;
+}
+
+.tv-content.changing {
+  opacity: 0;
+}
+
+.tv-channel-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--pixel-accent);
+}
+
+.tv-channel-number {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--pixel-accent);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.tv-channel-name {
+  font-size: 1rem;
+  color: var(--pixel-paper);
+}
+
+.tv-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tv-title {
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem;
+  color: var(--pixel-paper);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.tv-text-content {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--pixel-paper);
+  opacity: 0.9;
+}
+
+.tv-text-content p {
+  margin: 0.5rem 0;
+}
+
+/* CRT 电视扫描线效果 */
+.tv-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  animation: pixel-scan 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes pixel-scan {
+  0% {
+    top: 0;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    top: 100%;
+    opacity: 1;
+  }
+}
+
+/* 电视闪烁效果 */
+.television-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.02);
+  animation: pixel-flicker 0.15s infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tv-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tv-channel-btn {
+  font-family: var(--pixel-font);
+  font-size: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--pixel-paper);
+  color: var(--pixel-ink);
+  border: 2px solid var(--pixel-ink);
+  cursor: pointer;
+  transition: all 0.1s;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+}
+
+.tv-channel-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.tv-channel-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.tv-channel-btn.active {
+  background: var(--pixel-accent);
+  color: var(--pixel-paper);
+  border-color: var(--pixel-accent);
+}
+
+@media (max-width: 768px) {
+  .television-screen {
+    max-width: 100%;
+  }
+  
+  .tv-title {
+    font-size: 1.2rem;
+  }
+  
+  .tv-text-content {
+    font-size: 0.8rem;
+  }
+}
