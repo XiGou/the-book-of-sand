@@ -22,6 +22,7 @@ const LABELS = {
     noFirst: 'There is no first page.',
     noLast: 'There is no last page.',
     illustrationGone: '[You will never see it again.]',
+    illustrationHint: 'Look carefully. You will never see it again.',
   },
   cn: {
     prev: '上一页',
@@ -32,6 +33,7 @@ const LABELS = {
     noFirst: '没有第一页。',
     noLast: '没有最后一页。',
     illustrationGone: '［以后再也看不到了。］',
+    illustrationHint: '仔细瞧瞧。以后再也看不到了。',
   },
   es: {
     prev: 'Anterior',
@@ -42,6 +44,7 @@ const LABELS = {
     noFirst: 'No hay primera página.',
     noLast: 'No hay última página.',
     illustrationGone: '[Ya no la verás nunca más.]',
+    illustrationHint: 'Mira con atención. Ya no la verás nunca más.',
   },
   ja: {
     prev: '前へ',
@@ -52,6 +55,7 @@ const LABELS = {
     noFirst: '最初の頁はない。',
     noLast: '最後の頁はない。',
     illustrationGone: '［二度と見られませんから。］',
+    illustrationHint: 'よく見てください。二度と見られませんから。',
   },
   pt: {
     prev: 'Anterior',
@@ -62,6 +66,7 @@ const LABELS = {
     noFirst: 'Não há primeira página.',
     noLast: 'Não há última página.',
     illustrationGone: '[Nunca mais a verás.]',
+    illustrationHint: 'Olhe com atenção. Nunca mais a verás.',
   },
   fr: {
     prev: 'Précédent',
@@ -72,6 +77,7 @@ const LABELS = {
     noFirst: 'Il n\'y a pas de première page.',
     noLast: 'Il n\'y a pas de dernière page.',
     illustrationGone: '[Vous ne la reverrez jamais plus.]',
+    illustrationHint: 'Regardez attentivement. Vous ne la reverrez jamais plus.',
   },
   de: {
     prev: 'Zurück',
@@ -82,6 +88,7 @@ const LABELS = {
     noFirst: 'Es gibt keine erste Seite.',
     noLast: 'Es gibt keine letzte Seite.',
     illustrationGone: '[Sie werden sie nie wieder sehen.]',
+    illustrationHint: 'Schauen Sie genau hin. Sie werden sie nie wieder sehen.',
   },
   hi: {
     prev: 'पिछला',
@@ -92,6 +99,7 @@ const LABELS = {
     noFirst: 'पहला पन्ना नहीं है।',
     noLast: 'आख़िरी पन्ना नहीं है।',
     illustrationGone: '［फिर कभी नहीं देख पाएँगे।］',
+    illustrationHint: 'ध्यान से देखें। फिर कभी नहीं देख पाएँगे।',
   },
   la: {
     prev: 'Prior',
@@ -102,6 +110,7 @@ const LABELS = {
     noFirst: 'Prima pagina non est.',
     noLast: 'Ultima pagina non est.',
     illustrationGone: '[Numquam eam iterum videbis.]',
+    illustrationHint: 'Attente aspice. Numquam eam iterum videbis.',
   },
   el: {
     prev: 'Προηγούμενη',
@@ -112,6 +121,7 @@ const LABELS = {
     noFirst: 'Δεν υπάρχει πρώτη σελίδα.',
     noLast: 'Δεν υπάρχει τελευταία σελίδα.',
     illustrationGone: '[Δεν θα την ξαναδείτε ποτέ.]',
+    illustrationHint: 'Κοιτάξτε προσεκτικά. Δεν θα την ξαναδείτε ποτέ.',
   },
 } as const;
 
@@ -132,9 +142,9 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   const [pageIndex, setPageIndex] = useState(initialPageIndex);
   const [findingFirst, setFindingFirst] = useState(false);
   const [findingLast, setFindingLast] = useState(false);
-  const [seenIllustrationIds, setSeenIllustrationIds] = useState<Set<number>>(new Set());
   const [numberInput, setNumberInput] = useState<string>('');
   const numberInputTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const animationEndHandledRef = useRef(false);
   const t = LABELS[lang];
 
   const content = getPageContent(pageIndex, lang);
@@ -144,48 +154,63 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   const nextPageNumbers = getPageNumbers(pageIndex + 1);
   const prevPageNumbers = getPageNumbers(pageIndex - 1);
   const rawIllustrationId = getIllustration(pageIndex);
-  const showIllustration = rawIllustrationId !== null && !seenIllustrationIds.has(rawIllustrationId);
-  const illustrationAlreadySeen = rawIllustrationId !== null && seenIllustrationIds.has(rawIllustrationId);
-
-  // Debug: log illustration info
-  useEffect(() => {
-    if (rawIllustrationId !== null) {
-      console.log(`[BookReader] Page ${pageIndex} has illustration ID: ${rawIllustrationId}, showing: ${showIllustration}, already seen: ${illustrationAlreadySeen}`);
-    }
-  }, [pageIndex, rawIllustrationId, showIllustration, illustrationAlreadySeen]);
-
-  // Mark illustration as seen after it's displayed (with a delay to ensure visibility)
-  useEffect(() => {
-    if (rawIllustrationId !== null && showIllustration) {
-      // Delay marking as seen to ensure illustration is visible
-      const timer = setTimeout(() => {
-        setSeenIllustrationIds((prev) => {
-          const newSet = new Set(prev);
-          newSet.add(rawIllustrationId);
-          return newSet;
-        });
-      }, 500); // 500ms delay to ensure illustration is rendered
-      return () => clearTimeout(timer);
-    }
-  }, [pageIndex, rawIllustrationId, showIllustration]);
-
+  const hasIllustration = rawIllustrationId !== null;
+  
+  // Check if next page has illustration (for flip animation)
+  const nextPageIllustrationId = getIllustration(pageIndex + 1);
+  const hasNextPageIllustration = nextPageIllustrationId !== null;
+  
   const [flipDirection, setFlipDirection] = useState<'prev' | 'next' | null>(null);
+  
+  // Debug: verify illustration logic is working
+  useEffect(() => {
+    console.log(`[BookReader] Page ${pageIndex}: hasIllustration=${hasIllustration}, rawIllustrationId=${rawIllustrationId}, flipDirection=${flipDirection}`);
+    if (hasIllustration) {
+      console.log(`[BookReader] Page ${pageIndex} has illustration ID: ${rawIllustrationId}`);
+    }
+    if (hasNextPageIllustration) {
+      console.log(`[BookReader] Next page ${pageIndex + 1} has illustration ID: ${nextPageIllustrationId}`);
+    }
+  }, [pageIndex, hasIllustration, rawIllustrationId, hasNextPageIllustration, nextPageIllustrationId, flipDirection]);
 
   const goPrev = useCallback(() => {
+    animationEndHandledRef.current = false; // Reset flag when starting new animation
     setFlipDirection('prev');
   }, []);
 
   const goNext = useCallback(() => {
+    animationEndHandledRef.current = false; // Reset flag when starting new animation
     setFlipDirection('next');
   }, []);
 
   const handleAnimationEnd = useCallback((direction: 'prev' | 'next') => {
-    if (direction === 'next') {
-      setPageIndex((i) => i + 1);
-    } else {
-      setPageIndex((i) => i - 1);
+    // Prevent multiple calls - only handle the first animation end event
+    if (animationEndHandledRef.current) {
+      return;
     }
-    setFlipDirection(null);
+    animationEndHandledRef.current = true;
+    
+    // Use requestAnimationFrame to ensure state updates happen in the correct order
+    requestAnimationFrame(() => {
+      if (direction === 'next') {
+        setPageIndex((i) => {
+          const newIndex = i + 1;
+          const newIllustrationId = getIllustration(newIndex);
+          console.log(`[BookReader] Animation ended, pageIndex: ${i} -> ${newIndex}, hasIllustration: ${newIllustrationId !== null}`);
+          return newIndex;
+        });
+      } else {
+        setPageIndex((i) => i - 1);
+      }
+      // Delay clearing flipDirection slightly to ensure pageIndex update is processed first
+      requestAnimationFrame(() => {
+        setFlipDirection(null);
+        // Reset the flag after a short delay to allow next animation
+        setTimeout(() => {
+          animationEndHandledRef.current = false;
+        }, 100);
+      });
+    });
   }, []);
 
   // 清除数字输入
@@ -340,20 +365,23 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
         <div className="book-reader-spread">
           <div className="page page-left">
             <div className="page-number page-number-left">{leftNum}</div>
-            <div
-              className="page-content"
-              style={{
-                fontFamily:
-                  lang === 'cn' || lang === 'ja' || lang === 'hi'
-                    ? 'var(--font-serif-cn)'
-                    : undefined,
-              }}
-            >
-              {content}
-            </div>
-            {showIllustration && <Illustration id={rawIllustrationId!} />}
-            {illustrationAlreadySeen && (
-              <p className="page-illustration-gone">{t.illustrationGone}</p>
+            {hasIllustration ? (
+              <>
+                <Illustration id={rawIllustrationId!} />
+                <p className="page-illustration-hint">{t.illustrationHint || t.illustrationGone}</p>
+              </>
+            ) : (
+              <div
+                className="page-content"
+                style={{
+                  fontFamily:
+                    lang === 'cn' || lang === 'ja' || lang === 'hi'
+                      ? 'var(--font-serif-cn)'
+                      : undefined,
+                }}
+              >
+                {content}
+              </div>
             )}
           </div>
           <div className={`page page-right ${flipDirection === 'next' ? 'page-flipping' : ''}`}>
@@ -379,17 +407,24 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                 {flipDirection === 'next' ? (
                   <>
                     <div className="page-number page-number-left">{rightNum}</div>
-                    <div
-                      className="page-content"
-                      style={{
-                        fontFamily:
-                          lang === 'cn' || lang === 'ja' || lang === 'hi'
-                            ? 'var(--font-serif-cn)'
-                            : undefined,
-                      }}
-                    >
-                      {nextContent}
-                    </div>
+                    {hasNextPageIllustration ? (
+                      <>
+                        <Illustration id={nextPageIllustrationId!} />
+                        <p className="page-illustration-hint">{t.illustrationHint || t.illustrationGone}</p>
+                      </>
+                    ) : (
+                      <div
+                        className="page-content"
+                        style={{
+                          fontFamily:
+                            lang === 'cn' || lang === 'ja' || lang === 'hi'
+                              ? 'var(--font-serif-cn)'
+                              : undefined,
+                        }}
+                      >
+                        {nextContent}
+                      </div>
+                    )}
                   </>
                 ) : (
                   <>
@@ -423,6 +458,12 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                     >
                       {getPageContent(pageIndex + 2, lang)}
                     </div>
+                    {hasNextPageIllustration && (
+                      <>
+                        <Illustration id={nextPageIllustrationId!} />
+                        <p className="page-illustration-hint">{t.illustrationHint || t.illustrationGone}</p>
+                      </>
+                    )}
                   </>
                 ) : (
                   <>

@@ -397,6 +397,10 @@
   padding: 2rem 1.75rem;
   position: relative;
   border: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
 }
 
 .page-left {
@@ -406,9 +410,13 @@
 .page-number {
   position: absolute;
   top: 1rem;
-  font-size: 0.75rem;
-  opacity: 0.65;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  opacity: 0.85;
   font-variant-numeric: tabular-nums;
+  font-family: 'Courier New', 'Monaco', 'Menlo', monospace; /* 等宽字体确保数字对齐 */
+  white-space: nowrap; /* 防止换行 */
+  font-weight: 500;
 }
 
 .page-number-left {
@@ -421,22 +429,24 @@
 
 .page-content {
   font-size: 0.95rem;
-  line-height: 1.75;
+  line-height: 2.2;
   white-space: pre-wrap;
   word-break: break-word;
   columns: 2;
   column-gap: 2rem;
   column-fill: balance;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .page-illustration {
-  margin: 1.5rem 0 0;
+  margin: 0;
   padding: 0;
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  min-height: 100px;
+  flex: 1;
   position: relative;
   z-index: 1;
 }
@@ -448,12 +458,13 @@
   opacity: 0.75;
 }
 
-.page-illustration-gone {
-  margin: 1rem 0 0;
-  font-size: 0.8rem;
+.page-illustration-hint {
+  margin: 0.5rem 0 0;
+  font-size: 0.75rem;
   color: var(--color-ink);
-  opacity: 0.5;
+  opacity: 0.6;
   font-style: italic;
+  text-align: left;
 }
 
 .book-reader-hints {
