@@ -1,0 +1,101 @@
+.book-cover-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.book-cover {
+  position: relative;
+  width: 320px;
+  height: 420px;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-serif-en);
+  color: var(--color-ink);
+  transition: transform 0.2s ease;
+}
+
+.book-cover:hover {
+  transform: scale(1.02);
+}
+
+.book-cover:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
+.book-cover-spine {
+  position: absolute;
+  left: -12px;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(90deg, #1a1612 0%, var(--color-spine) 30%, #3d3529 50%, var(--color-spine) 70%, #1a1612 100%);
+  border-radius: 2px 0 0 2px;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.4);
+}
+
+.book-cover-face {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #c4b8a8 0%, #a89888 50%, #8a7c6e 100%);
+  border-radius: 2px 4px 4px 2px;
+  box-shadow:
+    2px 2px 0 rgba(0,0,0,0.1),
+    6px 6px 20px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  border: 1px solid rgba(0,0,0,0.15);
+}
+
+.book-cover-title {
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.book-cover-subtitle {
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  opacity: 0.85;
+  margin-bottom: 3rem;
+}
+
+.book-cover-hint {
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+}
+
+.book-cover-about {
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  font-family: var(--font-serif-en);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.book-cover-about:hover {
+  opacity: 1;
+}
+
+.book-cover-about:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

@@ -1,0 +1,44 @@
+:root {
+  --color-paper: #f4f0e8;
+  --color-ink: #1a1a1a;
+  --color-spine: #2c2419;
+  --color-accent: #6b5344;
+  --font-serif-en: 'Cormorant Garamond', Georgia, serif;
+  --font-serif-cn: 'Noto Serif SC', 'Songti SC', serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-width: 100vw;
+  overflow-x: hidden;
+  background: #1a1814;
+  color: var(--color-ink);
+  font-family: var(--font-serif-en);
+}
+
+#root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 100vw;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.app-fullscreen {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

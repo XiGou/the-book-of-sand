@@ -1,0 +1,115 @@
+.about {
+  width: 100%;
+  max-width: 640px;
+  min-height: 100vh;
+  padding: 2rem 1.5rem 3rem;
+  font-family: var(--font-serif-en);
+  color: var(--color-paper);
+}
+
+.about-header {
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.about-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin: 0 0 1rem;
+  color: var(--color-paper);
+}
+
+.about-intro {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin: 0;
+  opacity: 0.92;
+}
+
+.about-back {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid rgba(107, 83, 68, 0.5);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.about-back:hover {
+  background: rgba(107, 83, 68, 0.2);
+  border-color: var(--color-accent);
+}
+
+.about-back:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.about-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.about-section h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.5rem;
+  color: var(--color-paper);
+}
+
+.about-lead {
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+  opacity: 0.88;
+}
+
+.about-quote {
+  margin: 0.75rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--color-accent);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  opacity: 0.95;
+  font-style: italic;
+}
+
+.about-epigraph {
+  margin: 0.5rem 0 0.75rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.about-revelation {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin: 0.5rem 0;
+  opacity: 0.9;
+}
+
+@media (min-width: 600px) {
+  .about {
+    padding: 2.5rem 2rem 3rem;
+  }
+
+  .about-title {
+    font-size: 1.75rem;
+  }
+
+  .about-section h2 {
+    font-size: 1.2rem;
+  }
+
+  .about-quote,
+  .about-revelation {
+    font-size: 0.95rem;
+  }
+}
