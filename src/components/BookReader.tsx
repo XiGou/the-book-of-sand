@@ -136,7 +136,11 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   const t = LABELS[lang];
 
   const content = getPageContent(pageIndex, lang);
+  const nextContent = getPageContent(pageIndex + 1, lang);
+  const prevContent = getPageContent(pageIndex - 1, lang);
   const { left, right, usePower } = getPageNumbers(pageIndex);
+  const nextPageNumbers = getPageNumbers(pageIndex + 1);
+  const prevPageNumbers = getPageNumbers(pageIndex - 1);
   const rawIllustrationId = getIllustration(pageIndex);
   const showIllustration = rawIllustrationId !== null && !seenIllustrationIds.has(rawIllustrationId);
   const illustrationAlreadySeen = rawIllustrationId !== null && seenIllustrationIds.has(rawIllustrationId);
@@ -151,12 +155,19 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
 
   const goPrev = useCallback(() => {
     setFlipDirection('prev');
-    setPageIndex((i) => i - 1);
   }, []);
 
   const goNext = useCallback(() => {
     setFlipDirection('next');
-    setPageIndex((i) => i + 1);
+  }, []);
+
+  const handleAnimationEnd = useCallback((direction: 'prev' | 'next') => {
+    if (direction === 'next') {
+      setPageIndex((i) => i + 1);
+    } else {
+      setPageIndex((i) => i - 1);
+    }
+    setFlipDirection(null);
   }, []);
 
   const findFirstPage = useCallback(() => {
@@ -189,6 +200,8 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
 
   const leftNum = usePower ? formatPageNumber(left, true) : formatPageNumber(left);
   const rightNum = usePower ? formatPageNumber(right, true) : formatPageNumber(right);
+  const nextLeftNum = nextPageNumbers.usePower ? formatPageNumber(nextPageNumbers.left, true) : formatPageNumber(nextPageNumbers.left);
+  const prevRightNum = prevPageNumbers.usePower ? formatPageNumber(prevPageNumbers.right, true) : formatPageNumber(prevPageNumbers.right);
 
   return (
     <div className="book-reader" data-lang={lang}>
@@ -212,10 +225,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
         </div>
       </header>
 
-      <div
-        className={`book-reader-spread-outer ${flipDirection ? `turn-${flipDirection}` : ''}`}
-        onAnimationEnd={() => setFlipDirection(null)}
-      >
+      <div className="book-reader-spread-outer">
         <div className="book-reader-spread">
           <div className="page page-left">
             <div className="page-number page-number-left">{leftNum}</div>
@@ -235,9 +245,93 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
               <p className="page-illustration-gone">{t.illustrationGone}</p>
             )}
           </div>
-          <div className="page page-right">
+          <div className={`page page-right ${flipDirection === 'next' ? 'page-flipping' : ''}`}>
             <div className="page-number page-number-right">{rightNum}</div>
+            <div
+              className="page-content"
+              style={{
+                fontFamily:
+                  lang === 'cn' || lang === 'ja' || lang === 'hi'
+                    ? 'var(--font-serif-cn)'
+                    : undefined,
+              }}
+            >
+              {nextContent}
+            </div>
           </div>
+          {flipDirection && (
+            <div 
+              className={`page-flip page-flip-${flipDirection}`}
+              onAnimationEnd={() => handleAnimationEnd(flipDirection)}
+            >
+              <div className="page-flip-front">
+                {flipDirection === 'next' ? (
+                  <>
+                    <div className="page-number page-number-left">{rightNum}</div>
+                    <div
+                      className="page-content"
+                      style={{
+                        fontFamily:
+                          lang === 'cn' || lang === 'ja' || lang === 'hi'
+                            ? 'var(--font-serif-cn)'
+                            : undefined,
+                      }}
+                    >
+                      {nextContent}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="page-number page-number-right">{leftNum}</div>
+                    <div
+                      className="page-content"
+                      style={{
+                        fontFamily:
+                          lang === 'cn' || lang === 'ja' || lang === 'hi'
+                            ? 'var(--font-serif-cn)'
+                            : undefined,
+                      }}
+                    >
+                      {content}
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className="page-flip-back">
+                {flipDirection === 'next' ? (
+                  <>
+                    <div className="page-number page-number-right">{nextLeftNum}</div>
+                    <div
+                      className="page-content"
+                      style={{
+                        fontFamily:
+                          lang === 'cn' || lang === 'ja' || lang === 'hi'
+                            ? 'var(--font-serif-cn)'
+                            : undefined,
+                      }}
+                    >
+                      {getPageContent(pageIndex + 2, lang)}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="page-number page-number-left">{prevRightNum}</div>
+                    <div
+                      className="page-content"
+                      style={{
+                        fontFamily:
+                          lang === 'cn' || lang === 'ja' || lang === 'hi'
+                            ? 'var(--font-serif-cn)'
+                            : undefined,
+                      }}
+                    >
+                      {prevContent}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -87,37 +87,294 @@
   border-radius: 0;
   box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   overflow: hidden;
+  position: relative;
+  transform-style: preserve-3d;
 }
 
-.book-reader-spread-outer.turn-prev .book-reader-spread {
-  animation: page-turn-prev 0.4s ease-out;
+/* Page flip overlay for realistic page turning */
+.page-flip {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  z-index: 20;
 }
 
-.book-reader-spread-outer.turn-next .book-reader-spread {
-  animation: page-turn-next 0.4s ease-out;
+.page-flip-next {
+  left: 50%;
+  transform-origin: left center;
+  animation: flip-page-next 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+             shadow-next 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-@keyframes page-turn-next {
+.page-flip-prev {
+  left: 0;
+  transform-origin: right center;
+  animation: flip-page-prev 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+             shadow-prev 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.page-flip-front,
+.page-flip-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-paper);
+  padding: 2rem 1.75rem;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+.page-flip-front {
+  border: 1px solid rgba(0,0,0,0.06);
+  z-index: 2;
+}
+
+.page-flip-back {
+  transform: rotateY(180deg);
+  border: 1px solid rgba(0,0,0,0.06);
+  z-index: 1;
+}
+
+/* Paper curl effect - gradient overlay to simulate curvature */
+.page-flip-front::before,
+.page-flip-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.page-flip-next .page-flip-front::before {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,0.03) 20%,
+    rgba(0,0,0,0.08) 40%,
+    rgba(0,0,0,0.12) 60%,
+    rgba(0,0,0,0.15) 80%,
+    rgba(0,0,0,0.2) 100%
+  );
+  animation: curl-gradient-next 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.page-flip-prev .page-flip-front::before {
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    rgba(0,0,0,0.03) 20%,
+    rgba(0,0,0,0.08) 40%,
+    rgba(0,0,0,0.12) 60%,
+    rgba(0,0,0,0.15) 80%,
+    rgba(0,0,0,0.2) 100%
+  );
+  animation: curl-gradient-prev 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.page-flip-next .page-flip-back::before {
+  background: linear-gradient(
+    to left,
+    transparent 0%,
+    rgba(0,0,0,0.03) 20%,
+    rgba(0,0,0,0.08) 40%,
+    rgba(0,0,0,0.12) 60%,
+    rgba(0,0,0,0.15) 80%,
+    rgba(0,0,0,0.2) 100%
+  );
+  animation: curl-gradient-back-next 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.page-flip-prev .page-flip-back::before {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0,0,0,0.03) 20%,
+    rgba(0,0,0,0.08) 40%,
+    rgba(0,0,0,0.12) 60%,
+    rgba(0,0,0,0.15) 80%,
+    rgba(0,0,0,0.2) 100%
+  );
+  animation: curl-gradient-back-prev 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.page-flip-next .page-flip-front {
+  border-right: 1px solid rgba(0,0,0,0.08);
+}
+
+.page-flip-prev .page-flip-front {
+  border-left: 1px solid rgba(0,0,0,0.08);
+}
+
+.page-flip-next .page-flip-back {
+  border-left: 1px solid rgba(0,0,0,0.08);
+}
+
+.page-flip-prev .page-flip-back {
+  border-right: 1px solid rgba(0,0,0,0.08);
+}
+
+/* Shadow effect during flip - dynamic shadow that follows the curl */
+.page-flip-next {
+  animation: shadow-next 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.page-flip-prev {
+  animation: shadow-prev 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes shadow-next {
   0% {
-    transform: perspective(1200px) rotateY(0deg);
+    filter: drop-shadow(-2px 0 4px rgba(0,0,0,0.15));
   }
-  40% {
-    transform: perspective(1200px) rotateY(-6deg);
+  30% {
+    filter: drop-shadow(-8px 0 12px rgba(0,0,0,0.25)) 
+            drop-shadow(-12px 0 20px rgba(0,0,0,0.2));
+  }
+  60% {
+    filter: drop-shadow(-4px 0 8px rgba(0,0,0,0.3)) 
+            drop-shadow(-8px 0 16px rgba(0,0,0,0.25))
+            drop-shadow(-16px 0 24px rgba(0,0,0,0.15));
   }
   100% {
-    transform: perspective(1200px) rotateY(0deg);
+    filter: drop-shadow(2px 0 4px rgba(0,0,0,0.15));
   }
 }
 
-@keyframes page-turn-prev {
+@keyframes shadow-prev {
   0% {
-    transform: perspective(1200px) rotateY(0deg);
+    filter: drop-shadow(2px 0 4px rgba(0,0,0,0.15));
   }
-  40% {
-    transform: perspective(1200px) rotateY(6deg);
+  30% {
+    filter: drop-shadow(8px 0 12px rgba(0,0,0,0.25)) 
+            drop-shadow(12px 0 20px rgba(0,0,0,0.2));
+  }
+  60% {
+    filter: drop-shadow(4px 0 8px rgba(0,0,0,0.3)) 
+            drop-shadow(8px 0 16px rgba(0,0,0,0.25))
+            drop-shadow(16px 0 24px rgba(0,0,0,0.15));
   }
   100% {
-    transform: perspective(1200px) rotateY(0deg);
+    filter: drop-shadow(-2px 0 4px rgba(0,0,0,0.15));
+  }
+}
+
+@keyframes flip-page-next {
+  0% {
+    transform: rotateY(0deg) scaleX(1);
+  }
+  20% {
+    transform: rotateY(-20deg) scaleX(0.98);
+  }
+  40% {
+    transform: rotateY(-50deg) scaleX(0.92);
+  }
+  60% {
+    transform: rotateY(-90deg) scaleX(0.85);
+  }
+  80% {
+    transform: rotateY(-140deg) scaleX(0.92);
+  }
+  100% {
+    transform: rotateY(-180deg) scaleX(1);
+  }
+}
+
+@keyframes flip-page-prev {
+  0% {
+    transform: rotateY(0deg) scaleX(1);
+  }
+  20% {
+    transform: rotateY(20deg) scaleX(0.98);
+  }
+  40% {
+    transform: rotateY(50deg) scaleX(0.92);
+  }
+  60% {
+    transform: rotateY(90deg) scaleX(0.85);
+  }
+  80% {
+    transform: rotateY(140deg) scaleX(0.92);
+  }
+  100% {
+    transform: rotateY(180deg) scaleX(1);
+  }
+}
+
+/* Gradient animations for paper curl effect */
+@keyframes curl-gradient-next {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes curl-gradient-prev {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.6;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes curl-gradient-back-next {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes curl-gradient-back-prev {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
