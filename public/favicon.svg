@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- 沙之书主题：一本打开的书 -->
+  <rect x="20" y="30" width="60" height="40" fill="#2c2419" rx="2"/>
+  <rect x="20" y="30" width="30" height="40" fill="#f4f0e8"/>
+  <rect x="50" y="30" width="30" height="40" fill="#f4f0e8"/>
+  <!-- 书页线条 -->
+  <line x1="35" y1="35" x2="35" y2="65" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+  <line x1="40" y1="35" x2="40" y2="65" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+  <line x1="60" y1="35" x2="60" y2="65" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+  <line x1="65" y1="35" x2="65" y2="65" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+  <!-- 书脊 -->
+  <line x1="50" y1="30" x2="50" y2="70" stroke="#1a1a1a" stroke-width="1"/>
+</svg>
