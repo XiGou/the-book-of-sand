@@ -36,22 +36,23 @@ export function useSwipeGesture({
     const target: SwipeTarget | null = targetRef?.current ?? (targetRef ? null : window)
     if (!target) return
 
-    const handleTouchStart = (event: TouchEvent) => {
-      if (event.touches.length !== 1) {
+    const handleTouchStart = (event: Event) => {
+      const touchEvent = event as TouchEvent
+      if (touchEvent.touches.length !== 1) {
         startPointRef.current = null
         return
       }
 
       if (
         ignoreSelector &&
-        event.target instanceof Element &&
-        event.target.closest(ignoreSelector)
+        touchEvent.target instanceof Element &&
+        touchEvent.target.closest(ignoreSelector)
       ) {
         startPointRef.current = null
         return
       }
 
-      const touch = event.touches[0]
+      const touch = touchEvent.touches[0]
       startPointRef.current = {
         x: touch.clientX,
         y: touch.clientY,
@@ -59,8 +60,9 @@ export function useSwipeGesture({
       }
     }
 
-    const handleTouchEnd = (event: TouchEvent) => {
-      if (event.changedTouches.length !== 1) {
+    const handleTouchEnd = (event: Event) => {
+      const touchEvent = event as TouchEvent
+      if (touchEvent.changedTouches.length !== 1) {
         startPointRef.current = null
         return
       }
@@ -69,7 +71,7 @@ export function useSwipeGesture({
       startPointRef.current = null
       if (!startPoint) return
 
-      const touch = event.changedTouches[0]
+      const touch = touchEvent.changedTouches[0]
       const deltaX = touch.clientX - startPoint.x
       const deltaY = touch.clientY - startPoint.y
       const duration = Date.now() - startPoint.time
