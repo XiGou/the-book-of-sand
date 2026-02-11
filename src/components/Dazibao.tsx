@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { ContentGenerator } from '../lib/contentGenerator'
 import { dazibaoResources } from '../data/dazibao'
+import { useSwipeGesture } from '../lib/useSwipeGesture'
 import './Dazibao.css'
 
 interface DazibaoContent {
@@ -97,6 +98,13 @@ export function Dazibao() {
     }
   }, [scrollToPage])
 
+  useSwipeGesture({
+    targetRef: containerRef,
+    onSwipeUp: () => scrollToPage('next'),
+    onSwipeDown: () => scrollToPage('prev'),
+    ignoreSelector: '.dazibao-content',
+  })
+
   return (
     <div className="dazibao-container" ref={containerRef}>
       <div className="dazibao-page">
@@ -117,7 +125,7 @@ export function Dazibao() {
         </div>
       </div>
       <div className="dazibao-hint">
-        使用 ↑↓ 键或鼠标滚轮切换大字报
+        使用 ↑↓ 键、上下滑动或鼠标滚轮切换大字报
       </div>
     </div>
   )

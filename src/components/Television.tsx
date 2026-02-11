@@ -7,6 +7,7 @@ import {
   dramas, 
   varietyShows 
 } from '../data/television'
+import { useSwipeGesture } from '../lib/useSwipeGesture'
 import './Television.css'
 
 type ChannelType = 'news' | 'variety' | 'drama'
@@ -78,6 +79,7 @@ function generateChannelContent(channel: Channel): ChannelContent {
 export function Television() {
   const [currentChannelIndex, setCurrentChannelIndex] = useState(0)
   const [isChanging, setIsChanging] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
   // 存储每个索引对应的随机seed，确保每次前进时随机，返回时保持一致
   const seedCacheRef = useRef<Map<number, number>>(new Map())
   
@@ -126,8 +128,14 @@ export function Television() {
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [changeChannel])
 
+  useSwipeGesture({
+    targetRef: containerRef,
+    onSwipeUp: () => changeChannel('next'),
+    onSwipeDown: () => changeChannel('prev'),
+  })
+
   return (
-    <div className="television-container">
+    <div className="television-container" ref={containerRef}>
       <div className="television-screen">
         <div className={`tv-content ${isChanging ? 'changing' : ''}`}>
           <div className="tv-channel-info">
@@ -159,7 +167,7 @@ export function Television() {
             {currentChannel.name}
           </div>
           <div className="tv-channel-hint">
-            使用 ↑↓ 键或按钮切换频道
+            使用 ↑↓ 键、上下滑动或按钮切换频道
           </div>
         </div>
         <button

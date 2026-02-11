@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react'
 import { ContentGenerator } from '../lib/contentGenerator'
 import { douyinResources } from '../data/douyin'
+import { useSwipeGesture } from '../lib/useSwipeGesture'
 import './Douyin.css'
 
 interface VideoContent {
@@ -229,6 +230,12 @@ export function Douyin() {
       return () => container.removeEventListener('wheel', handleWheel)
     }
   }, [changeVideo])
+
+  useSwipeGesture({
+    targetRef: containerRef,
+    onSwipeUp: () => changeVideo('next'),
+    onSwipeDown: () => changeVideo('prev'),
+  })
 
   // 使用useMemo缓存transform值，避免每次渲染都重新计算
   // wrapper高度是videos.length * containerHeight（像素值）

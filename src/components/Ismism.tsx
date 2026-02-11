@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { isms } from '../data/isms'
+import { useSwipeGesture } from '../lib/useSwipeGesture'
 import './Ismism.css'
 
 export function Ismism() {
@@ -75,6 +76,12 @@ export function Ismism() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [goNext, goPrev])
 
+  useSwipeGesture({
+    targetRef: containerRef,
+    onSwipeLeft: goNext,
+    onSwipeRight: goPrev,
+  })
+
   const currentIsm = isms[currentIndex]
 
   return (
@@ -103,7 +110,7 @@ export function Ismism() {
           </button>
         </div>
         <div className="ismism-hint">
-          使用方向键 ← → 或点击按钮切换
+          使用方向键 ← →、左右滑动或点击按钮切换
         </div>
       </div>
     </div>
