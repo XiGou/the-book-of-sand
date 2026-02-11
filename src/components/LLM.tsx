@@ -1,5 +1,6 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { prompts, models, textResults, imageResults, videoResults, codeResults, type Model } from '../data/llm'
+import { useSwipeGesture } from '../lib/useSwipeGesture'
 import './LLM.css'
 
 export function LLM() {
@@ -7,6 +8,7 @@ export function LLM() {
   const [currentModel, setCurrentModel] = useState<Model | null>(null)
   const [currentResult, setCurrentResult] = useState<string>('')
   const [isGenerating, setIsGenerating] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const generate = useCallback(() => {
     // 步骤1: 随机选择Prompt
@@ -58,6 +60,12 @@ export function LLM() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [generate])
 
+  useSwipeGesture({
+    targetRef: containerRef,
+    onSwipeLeft: generate,
+    onSwipeRight: generate,
+  })
+
   const getResultType = () => {
     if (!currentModel) return null
     return currentModel.type
@@ -66,13 +74,13 @@ export function LLM() {
   const resultType = getResultType()
 
   return (
-    <div className="llm-container">
+    <div className="llm-container" ref={containerRef}>
       {/* 控制按钮 */}
       <div className="llm-controls">
         <button className="llm-generate-button" onClick={generate}>
           生成
         </button>
-        <div className="llm-controls-hint">点击按钮或按 ← → 方向键生成</div>
+        <div className="llm-controls-hint">点击按钮、左右滑动或按 ← → 方向键生成</div>
       </div>
 
       <div className="llm-content">

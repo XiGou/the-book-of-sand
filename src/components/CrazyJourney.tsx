@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { destinations, sloganTemplates, type Destination } from '../data/crazyJourney'
+import { useSwipeGesture } from '../lib/useSwipeGesture'
 import './CrazyJourney.css'
 
 function pickRandom<T>(arr: T[]): T {
@@ -13,6 +14,7 @@ function fillSlogan(template: string, destinationName: string): string {
 export function CrazyJourney() {
   const [destination, setDestination] = useState<Destination | null>(null)
   const [slogan, setSlogan] = useState<string>('')
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const drawNext = useCallback(() => {
     const dest = pickRandom(destinations)
@@ -36,16 +38,24 @@ export function CrazyJourney() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [drawNext])
 
+  useSwipeGesture({
+    targetRef: containerRef,
+    onSwipeLeft: drawNext,
+    onSwipeRight: drawNext,
+    onSwipeUp: drawNext,
+    onSwipeDown: drawNext,
+  })
+
   if (!destination) {
     return (
-      <div className="crazy-journey-container">
+      <div className="crazy-journey-container" ref={containerRef}>
         <div className="crazy-journey-card">加载中…</div>
       </div>
     )
   }
 
   return (
-    <div className="crazy-journey-container">
+    <div className="crazy-journey-container" ref={containerRef}>
       <div className="crazy-journey-card">
         <div className="crazy-journey-meta">
           <span className="crazy-journey-country">{destination.country}</span>
@@ -62,7 +72,7 @@ export function CrazyJourney() {
             下一站
           </button>
         </div>
-        <p className="crazy-journey-hint">方向键或空格也可换一站</p>
+        <p className="crazy-journey-hint">方向键、空格或滑动也可换一站</p>
       </div>
     </div>
   )
