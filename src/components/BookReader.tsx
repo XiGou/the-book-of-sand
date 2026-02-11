@@ -144,74 +144,57 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   const [findingLast, setFindingLast] = useState(false);
   const [numberInput, setNumberInput] = useState<string>('');
   const numberInputTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const animationEndHandledRef = useRef(false);
   const t = LABELS[lang];
 
   const content = getPageContent(pageIndex, lang);
-  const nextContent = getPageContent(pageIndex + 1, lang);
-  const prevContent = getPageContent(pageIndex - 1, lang);
-  const { left, right, usePower } = getPageNumbers(pageIndex);
-  const nextPageNumbers = getPageNumbers(pageIndex + 1);
-  const prevPageNumbers = getPageNumbers(pageIndex - 1);
+  const { left, usePower } = getPageNumbers(pageIndex);
   const rawIllustrationId = getIllustration(pageIndex);
   const hasIllustration = rawIllustrationId !== null;
   
-  // Check if next page has illustration (for flip animation)
-  const nextPageIllustrationId = getIllustration(pageIndex + 1);
-  const hasNextPageIllustration = nextPageIllustrationId !== null;
-  
-  const [flipDirection, setFlipDirection] = useState<'prev' | 'next' | null>(null);
-  
-  // Debug: verify illustration logic is working
-  useEffect(() => {
-    console.log(`[BookReader] Page ${pageIndex}: hasIllustration=${hasIllustration}, rawIllustrationId=${rawIllustrationId}, flipDirection=${flipDirection}`);
-    if (hasIllustration) {
-      console.log(`[BookReader] Page ${pageIndex} has illustration ID: ${rawIllustrationId}`);
-    }
-    if (hasNextPageIllustration) {
-      console.log(`[BookReader] Next page ${pageIndex + 1} has illustration ID: ${nextPageIllustrationId}`);
-    }
-  }, [pageIndex, hasIllustration, rawIllustrationId, hasNextPageIllustration, nextPageIllustrationId, flipDirection]);
+  const [flipState, setFlipState] = useState<'idle' | 'flipping-next' | 'flipping-prev'>('idle');
+  const [nextPageData, setNextPageData] = useState<{ content: string; pageNum: string; hasIllustration: boolean; illustrationId: number | null } | null>(null);
 
   const goPrev = useCallback(() => {
-    animationEndHandledRef.current = false; // Reset flag when starting new animation
-    setFlipDirection('prev');
-  }, []);
+    if (flipState !== 'idle') return;
+    setFlipState('flipping-prev');
+    const prevIndex = pageIndex - 1;
+    const prevContent = getPageContent(prevIndex, lang);
+    const prevPageNums = getPageNumbers(prevIndex);
+    const prevPageNum = prevPageNums.usePower ? formatPageNumber(prevPageNums.left, true) : formatPageNumber(prevPageNums.left);
+    const prevIllustrationId = getIllustration(prevIndex);
+    setNextPageData({
+      content: prevContent,
+      pageNum: prevPageNum,
+      hasIllustration: prevIllustrationId !== null,
+      illustrationId: prevIllustrationId,
+    });
+    setTimeout(() => {
+      setPageIndex(prevIndex);
+      setFlipState('idle');
+      setNextPageData(null);
+    }, 500);
+  }, [flipState, pageIndex, lang]);
 
   const goNext = useCallback(() => {
-    animationEndHandledRef.current = false; // Reset flag when starting new animation
-    setFlipDirection('next');
-  }, []);
-
-  const handleAnimationEnd = useCallback((direction: 'prev' | 'next') => {
-    // Prevent multiple calls - only handle the first animation end event
-    if (animationEndHandledRef.current) {
-      return;
-    }
-    animationEndHandledRef.current = true;
-    
-    // Use requestAnimationFrame to ensure state updates happen in the correct order
-    requestAnimationFrame(() => {
-      if (direction === 'next') {
-        setPageIndex((i) => {
-          const newIndex = i + 1;
-          const newIllustrationId = getIllustration(newIndex);
-          console.log(`[BookReader] Animation ended, pageIndex: ${i} -> ${newIndex}, hasIllustration: ${newIllustrationId !== null}`);
-          return newIndex;
-        });
-      } else {
-        setPageIndex((i) => i - 1);
-      }
-      // Delay clearing flipDirection slightly to ensure pageIndex update is processed first
-      requestAnimationFrame(() => {
-        setFlipDirection(null);
-        // Reset the flag after a short delay to allow next animation
-        setTimeout(() => {
-          animationEndHandledRef.current = false;
-        }, 100);
-      });
+    if (flipState !== 'idle') return;
+    setFlipState('flipping-next');
+    const nextIndex = pageIndex + 1;
+    const nextContent = getPageContent(nextIndex, lang);
+    const nextPageNums = getPageNumbers(nextIndex);
+    const nextPageNum = nextPageNums.usePower ? formatPageNumber(nextPageNums.left, true) : formatPageNumber(nextPageNums.left);
+    const nextIllustrationId = getIllustration(nextIndex);
+    setNextPageData({
+      content: nextContent,
+      pageNum: nextPageNum,
+      hasIllustration: nextIllustrationId !== null,
+      illustrationId: nextIllustrationId,
     });
-  }, []);
+    setTimeout(() => {
+      setPageIndex(nextIndex);
+      setFlipState('idle');
+      setNextPageData(null);
+    }, 500);
+  }, [flipState, pageIndex, lang]);
 
   // 清除数字输入
   const clearNumberInput = useCallback(() => {
@@ -238,7 +221,8 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
     }
 
     // 连续翻多页，直接更新页码（不使用动画）
-    setFlipDirection(null); // 取消动画
+    setFlipState('idle');
+    setNextPageData(null);
     if (direction === 'next') {
       setPageIndex((i) => i + count);
     } else {
@@ -330,9 +314,6 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   }, []);
 
   const leftNum = usePower ? formatPageNumber(left, true) : formatPageNumber(left);
-  const rightNum = usePower ? formatPageNumber(right, true) : formatPageNumber(right);
-  const nextLeftNum = nextPageNumbers.usePower ? formatPageNumber(nextPageNumbers.left, true) : formatPageNumber(nextPageNumbers.left);
-  const prevRightNum = prevPageNumbers.usePower ? formatPageNumber(prevPageNumbers.right, true) : formatPageNumber(prevPageNumbers.right);
 
   return (
     <div className="book-reader" data-lang={lang}>
@@ -361,13 +342,37 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
         </div>
       </header>
 
-      <div className="book-reader-spread-outer">
-        <div className="book-reader-spread">
-          <div className="page page-left">
-            <div className="page-number page-number-left">{leftNum}</div>
-            {hasIllustration ? (
+      <div className="book-reader-page-wrapper">
+        {/* 当前页 */}
+        <div className={`page page-current ${flipState === 'flipping-next' ? 'flipping-out-next' : flipState === 'flipping-prev' ? 'flipping-out-prev' : ''}`}>
+          <div className="page-number page-number-center">{leftNum}</div>
+          {hasIllustration ? (
+            <>
+              <Illustration id={rawIllustrationId!} />
+              <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
+            </>
+          ) : (
+            <div
+              className="page-content"
+              style={{
+                fontFamily:
+                  lang === 'cn' || lang === 'ja' || lang === 'hi'
+                    ? 'var(--font-serif-cn)'
+                    : undefined,
+              }}
+            >
+              {content}
+            </div>
+          )}
+        </div>
+
+        {/* 下一页（翻页时显示） */}
+        {flipState === 'flipping-next' && nextPageData && (
+          <div className="page page-next flipping-in">
+            <div className="page-number page-number-center">{nextPageData.pageNum}</div>
+            {nextPageData.hasIllustration ? (
               <>
-                <Illustration id={rawIllustrationId!} />
+                <Illustration id={nextPageData.illustrationId!} />
                 <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
               </>
             ) : (
@@ -380,111 +385,36 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                       : undefined,
                 }}
               >
-                {content}
+                {nextPageData.content}
               </div>
             )}
           </div>
-          <div className={`page page-right ${flipDirection === 'next' ? 'page-flipping' : ''}`}>
-            <div className="page-number page-number-right">{rightNum}</div>
-            <div
-              className="page-content"
-              style={{
-                fontFamily:
-                  lang === 'cn' || lang === 'ja' || lang === 'hi'
-                    ? 'var(--font-serif-cn)'
-                    : undefined,
-              }}
-            >
-              {nextContent}
-            </div>
+        )}
+
+        {/* 上一页（翻页时显示） */}
+        {flipState === 'flipping-prev' && nextPageData && (
+          <div className="page page-prev flipping-in">
+            <div className="page-number page-number-center">{nextPageData.pageNum}</div>
+            {nextPageData.hasIllustration ? (
+              <>
+                <Illustration id={nextPageData.illustrationId!} />
+                <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
+              </>
+            ) : (
+              <div
+                className="page-content"
+                style={{
+                  fontFamily:
+                    lang === 'cn' || lang === 'ja' || lang === 'hi'
+                      ? 'var(--font-serif-cn)'
+                      : undefined,
+                }}
+              >
+                {nextPageData.content}
+              </div>
+            )}
           </div>
-          {flipDirection && (
-            <div 
-              className={`page-flip page-flip-${flipDirection}`}
-              onAnimationEnd={() => handleAnimationEnd(flipDirection)}
-            >
-              <div className="page-flip-front">
-                {flipDirection === 'next' ? (
-                  <>
-                    <div className="page-number page-number-left">{rightNum}</div>
-                    {hasNextPageIllustration ? (
-                      <>
-                        <Illustration id={nextPageIllustrationId!} />
-                        <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
-                      </>
-                    ) : (
-                      <div
-                        className="page-content"
-                        style={{
-                          fontFamily:
-                            lang === 'cn' || lang === 'ja' || lang === 'hi'
-                              ? 'var(--font-serif-cn)'
-                              : undefined,
-                        }}
-                      >
-                        {nextContent}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <div className="page-number page-number-right">{leftNum}</div>
-                    <div
-                      className="page-content"
-                      style={{
-                        fontFamily:
-                          lang === 'cn' || lang === 'ja' || lang === 'hi'
-                            ? 'var(--font-serif-cn)'
-                            : undefined,
-                      }}
-                    >
-                      {content}
-                    </div>
-                  </>
-                )}
-              </div>
-              <div className="page-flip-back">
-                {flipDirection === 'next' ? (
-                  <>
-                    <div className="page-number page-number-right">{nextLeftNum}</div>
-                    <div
-                      className="page-content"
-                      style={{
-                        fontFamily:
-                          lang === 'cn' || lang === 'ja' || lang === 'hi'
-                            ? 'var(--font-serif-cn)'
-                            : undefined,
-                      }}
-                    >
-                      {getPageContent(pageIndex + 2, lang)}
-                    </div>
-                    {hasNextPageIllustration && (
-                      <>
-                        <Illustration id={nextPageIllustrationId!} />
-                        <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <div className="page-number page-number-left">{prevRightNum}</div>
-                    <div
-                      className="page-content"
-                      style={{
-                        fontFamily:
-                          lang === 'cn' || lang === 'ja' || lang === 'hi'
-                            ? 'var(--font-serif-cn)'
-                            : undefined,
-                      }}
-                    >
-                      {prevContent}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       <nav className="book-reader-nav">
