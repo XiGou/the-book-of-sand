@@ -1,4 +1,4 @@
-/* 疯狂之旅 · 旅游主题卡片，与全站深色背景、衬线字体兼容 */
+/* 疯狂之旅 · 旅行海报风格，简洁大气，契合旅行宣传 */
 
 .crazy-journey-container {
   width: 100%;
@@ -11,130 +11,154 @@
   font-family: var(--font-serif-cn, 'Noto Serif SC'), var(--font-serif-en, 'Cormorant Garamond'), serif;
 }
 
-.crazy-journey-card {
-  background: linear-gradient(145deg, #2a2620 0%, #1f1d19 100%);
-  border: 1px solid rgba(212, 175, 125, 0.25);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 125, 0.08);
-  padding: 2.5rem 3rem;
-  max-width: 520px;
+.crazy-journey-poster {
+  background: #f4f0e8;
+  max-width: 800px;
   width: 100%;
+  padding: 3rem 4rem;
   position: relative;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* 无圆角，简洁大气 */
 }
 
-.crazy-journey-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, rgba(212, 175, 125, 0.5), transparent);
-  pointer-events: none;
+/* 顶部：地区信息 */
+.crazy-journey-location {
+  font-size: 0.9rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0;
 }
 
-.crazy-journey-meta {
+/* 名称容器：居中 */
+.crazy-journey-title-wrapper {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+/* 名称：大字展示，随机样式通过内联style应用 */
+.crazy-journey-title {
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  line-height: 1.2;
+  text-transform: uppercase;
+  display: inline-block;
+  /* 随机样式通过内联style动态应用 */
+  transition: all 0.3s ease;
+}
+
+/* 介绍：常规正文布局 */
+.crazy-journey-intro {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+  text-align: justify;
+  margin: 1rem 0;
+  flex: 1;
+}
+
+/* 底部：路牌容器 */
+.crazy-journey-sign-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 蓝色路牌背景的slogan */
+.crazy-journey-slogan-sign {
+  background: #1E3A8A; /* 深蓝色路牌背景 */
+  color: #FFFFFF;
+  padding: 1.5rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.05em;
+  position: relative;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.85rem;
-  color: rgba(244, 240, 232, 0.65);
-  letter-spacing: 0.02em;
-}
-
-.crazy-journey-dot {
-  color: rgba(212, 175, 125, 0.5);
-  margin: 0 0.1rem;
-}
-
-.crazy-journey-type {
-  color: rgba(212, 175, 125, 0.9);
-}
-
-.crazy-journey-title {
-  font-size: 2rem;
-  font-weight: 600;
-  color: #f4f0e8;
-  margin: 0 0 1rem;
-  letter-spacing: 0.05em;
-  line-height: 1.3;
-}
-
-.crazy-journey-intro {
-  font-size: 1rem;
-  line-height: 1.75;
-  color: rgba(244, 240, 232, 0.85);
-  margin: 0 0 1.5rem;
-}
-
-.crazy-journey-slogan {
-  font-size: 1.05rem;
-  color: rgba(212, 175, 125, 0.95);
-  font-style: italic;
-  padding: 1rem 1.25rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  border-left: 3px solid rgba(212, 175, 125, 0.5);
-  margin-bottom: 1.75rem;
-}
-
-.crazy-journey-actions {
-  display: flex;
   justify-content: center;
-  margin-bottom: 0.75rem;
+  gap: 1rem;
+  /* 路牌样式：白色边框 */
+  border: 4px solid #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.crazy-journey-button {
-  background: transparent;
-  border: 1px solid rgba(212, 175, 125, 0.5);
-  color: rgba(212, 175, 125, 0.95);
-  padding: 0.6rem 1.5rem;
-  font-size: 0.95rem;
-  font-family: inherit;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
+/* 路牌文字 */
+.crazy-journey-slogan-text {
+  flex: 1;
 }
 
-.crazy-journey-button:hover {
-  background: rgba(212, 175, 125, 0.15);
-  border-color: rgba(212, 175, 125, 0.6);
-  color: #f4f0e8;
+/* 左右箭头 */
+.crazy-journey-arrow-left,
+.crazy-journey-arrow-right {
+  font-size: 1.5rem;
+  font-weight: bold;
+  opacity: 0.9;
+  flex-shrink: 0;
 }
 
-.crazy-journey-button:active {
-  background: rgba(212, 175, 125, 0.25);
+/* 路牌柱子 */
+.crazy-journey-sign-pole {
+  width: 12px;
+  height: 60px;
+  background: #8B4513; /* 棕色柱子 */
+  margin-top: -2px; /* 与路牌连接 */
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* 柱子底部阴影 */
+.crazy-journey-sign-pole::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+}
+
+/* 操作提示 */
 .crazy-journey-hint {
-  font-size: 0.8rem;
-  color: rgba(244, 240, 232, 0.45);
+  font-size: 0.75rem;
+  color: #999;
   text-align: center;
-  margin: 0;
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
   .crazy-journey-container {
-    padding: 1.25rem;
+    padding: 1rem;
   }
 
-  .crazy-journey-card {
-    padding: 1.75rem 1.5rem;
+  .crazy-journey-poster {
+    padding: 2rem 2.5rem;
+    gap: 1.5rem;
   }
 
-  .crazy-journey-title {
-    font-size: 1.6rem;
+  .crazy-journey-location {
+    font-size: 0.8rem;
   }
+
+  /* 移动端保持随机样式，字体大小会自动适配 */
 
   .crazy-journey-intro {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
-  .crazy-journey-slogan {
-    font-size: 0.98rem;
-    padding: 0.85rem 1rem;
+  .crazy-journey-slogan-sign {
+    font-size: 1rem;
+    padding: 1.25rem 1.5rem;
   }
 }
