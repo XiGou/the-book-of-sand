@@ -9,6 +9,30 @@
   position: relative;
 }
 
+/* 船锚容器：右上角，不透明背景 */
+.anchor-overlay-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 120px;
+  padding: 8px;
+  background: var(--color-paper, #f4f0e8);
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 船锚图标 (Lucide Anchor) */
+.anchor-icon {
+  flex-shrink: 0;
+  color: var(--color-ink, #1a1a1a);
+  opacity: 0.95;
+}
+
 .game-of-life-grid {
   display: grid;
   gap: 2px;

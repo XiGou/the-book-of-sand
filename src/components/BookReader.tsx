@@ -153,9 +153,16 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
   
   const [flipState, setFlipState] = useState<'idle' | 'flipping-next' | 'flipping-prev'>('idle');
   const [nextPageData, setNextPageData] = useState<{ content: string; pageNum: string; hasIllustration: boolean; illustrationId: number | null } | null>(null);
+  /** 船锚已看过的插图 ID（看一次即消失） */
+  const [anchorSeenIds, setAnchorSeenIds] = useState<Set<number>>(() => new Set());
+
+  const markAnchorSeen = useCallback((illustrationId: number) => {
+    setAnchorSeenIds((prev) => new Set(prev).add(illustrationId));
+  }, []);
 
   const goPrev = useCallback(() => {
     if (flipState !== 'idle') return;
+    if (hasIllustration && rawIllustrationId !== null) markAnchorSeen(rawIllustrationId);
     setFlipState('flipping-prev');
     const prevIndex = pageIndex - 1;
     const prevContent = getPageContent(prevIndex, lang);
@@ -173,10 +180,11 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
       setFlipState('idle');
       setNextPageData(null);
     }, 500);
-  }, [flipState, pageIndex, lang]);
+  }, [flipState, pageIndex, lang, hasIllustration, rawIllustrationId, markAnchorSeen]);
 
   const goNext = useCallback(() => {
     if (flipState !== 'idle') return;
+    if (hasIllustration && rawIllustrationId !== null) markAnchorSeen(rawIllustrationId);
     setFlipState('flipping-next');
     const nextIndex = pageIndex + 1;
     const nextContent = getPageContent(nextIndex, lang);
@@ -194,7 +202,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
       setFlipState('idle');
       setNextPageData(null);
     }, 500);
-  }, [flipState, pageIndex, lang]);
+  }, [flipState, pageIndex, lang, hasIllustration, rawIllustrationId, markAnchorSeen]);
 
   // 清除数字输入
   const clearNumberInput = useCallback(() => {
@@ -221,6 +229,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
     }
 
     // 连续翻多页，直接更新页码（不使用动画）
+    if (hasIllustration && rawIllustrationId !== null) markAnchorSeen(rawIllustrationId);
     setFlipState('idle');
     setNextPageData(null);
     if (direction === 'next') {
@@ -229,7 +238,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
       setPageIndex((i) => i - count);
     }
     clearNumberInput();
-  }, [goNext, goPrev, clearNumberInput]);
+  }, [goNext, goPrev, clearNumberInput, hasIllustration, rawIllustrationId, markAnchorSeen]);
 
   // 键盘事件处理
   useEffect(() => {
@@ -348,7 +357,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
           <div className="page-number page-number-center">{leftNum}</div>
           {hasIllustration ? (
             <>
-              <Illustration id={rawIllustrationId!} />
+              <Illustration id={rawIllustrationId!} anchorSeen={anchorSeenIds.has(rawIllustrationId!)} />
               <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
             </>
           ) : (
@@ -372,7 +381,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
             <div className="page-number page-number-center">{nextPageData.pageNum}</div>
             {nextPageData.hasIllustration ? (
               <>
-                <Illustration id={nextPageData.illustrationId!} />
+                <Illustration id={nextPageData.illustrationId!} anchorSeen={anchorSeenIds.has(nextPageData.illustrationId!)} />
                 <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
               </>
             ) : (
@@ -397,7 +406,7 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
             <div className="page-number page-number-center">{nextPageData.pageNum}</div>
             {nextPageData.hasIllustration ? (
               <>
-                <Illustration id={nextPageData.illustrationId!} />
+                <Illustration id={nextPageData.illustrationId!} anchorSeen={anchorSeenIds.has(nextPageData.illustrationId!)} />
                 <p className="page-illustration-hint">{(t as typeof LABELS.en).illustrationHint || (t as typeof LABELS.en).illustrationGone}</p>
               </>
             ) : (

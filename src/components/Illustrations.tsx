@@ -6,8 +6,14 @@
 
 import { GameOfLifeIllustration } from './GameOfLifeIllustration';
 
-export function Illustration({ id }: { id: number }) {
-  // Use Game of Life for all illustrations
-  // Each id generates a unique pattern
-  return <GameOfLifeIllustration id={id} />;
+interface IllustrationProps {
+  id: number
+  /** 船锚是否已看过（看过一次即消失） */
+  anchorSeen?: boolean
+}
+
+export function Illustration({ id, anchorSeen = false }: IllustrationProps) {
+  return (
+    <GameOfLifeIllustration id={id} showAnchor={!anchorSeen} />
+  )
 }
