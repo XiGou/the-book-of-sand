@@ -79,7 +79,7 @@
   font-weight: 600;
 }
 
-/* 单页布局容器 */
+/* 单页布局容器：深色背景，纸张居中 */
 .book-reader-page-wrapper {
   flex: 1 1 0;
   min-height: 0;
@@ -89,75 +89,80 @@
   width: 100%;
   position: relative;
   overflow: hidden;
+  background: #1a1814;
+  contain: layout paint;
 }
 
-/* 单页样式 */
+/* 单页样式：八开比例 270×390 (9:13)，纸张浮于深色背景之上 */
 .page {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, 85vw);
+  aspect-ratio: 270 / 390;
+  max-height: min(calc(100vh - var(--nav-height, 7rem) - 8rem), 95vh);
   background: var(--color-paper);
   color: var(--color-ink);
   box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 0, 0, 0.05);
+    0 4px 20px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(0, 0, 0, 0.08);
   padding: 2rem 1.75rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100%;
   will-change: opacity, transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* 当前页 */
 .page-current {
   opacity: 1;
   z-index: 1;
-  transform: translateX(0) scale(1);
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-50%, -50%) translateX(0) scale(1);
+  transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+              transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* 下一页 */
 .page-next {
   opacity: 0;
   z-index: 2;
-  transform: translateX(30px) scale(0.98);
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-50%, -50%) translateX(24px) scale(0.99);
+  transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+              transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* 上一页 */
 .page-prev {
   opacity: 0;
   z-index: 2;
-  transform: translateX(-30px) scale(0.98);
-  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-50%, -50%) translateX(-24px) scale(0.99);
+  transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+              transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* 翻页动画：当前页淡出 */
 .page-current.flipping-out-next {
   opacity: 0;
-  transform: translateX(-30px) scale(0.98);
+  transform: translate(-50%, -50%) translateX(-24px) scale(0.99);
 }
 
 .page-current.flipping-out-prev {
   opacity: 0;
-  transform: translateX(30px) scale(0.98);
+  transform: translate(-50%, -50%) translateX(24px) scale(0.99);
 }
 
 /* 翻页动画：新页淡入 */
 .page-next.flipping-in {
   opacity: 1;
-  transform: translateX(0) scale(1);
+  transform: translate(-50%, -50%) translateX(0) scale(1);
 }
 
 .page-prev.flipping-in {
   opacity: 1;
-  transform: translateX(0) scale(1);
+  transform: translate(-50%, -50%) translateX(0) scale(1);
 }
 
 /* 卷曲阴影效果（仅在翻页时显示） */
@@ -206,8 +211,11 @@
   }
 }
 
-/* 动画结束后移除 will-change 优化 */
-.page-current:not(.flipping-out-next):not(.flipping-out-prev),
+/* 动画结束后移除 will-change，避免闪屏 */
+.page-current:not(.flipping-out-next):not(.flipping-out-prev) {
+  will-change: auto;
+}
+
 .page-next:not(.flipping-in),
 .page-prev:not(.flipping-in) {
   will-change: auto;
@@ -322,7 +330,7 @@
 /* 移动端优化 */
 @media (max-width: 768px) {
   .page {
-    max-width: 100%;
+    width: min(92vw, 340px);
     padding: 1.5rem 1.25rem;
   }
 

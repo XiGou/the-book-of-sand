@@ -176,10 +176,12 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
       illustrationId: prevIllustrationId,
     });
     setTimeout(() => {
-      setPageIndex(prevIndex);
-      setFlipState('idle');
-      setNextPageData(null);
-    }, 500);
+      requestAnimationFrame(() => {
+        setPageIndex(prevIndex);
+        setFlipState('idle');
+        setNextPageData(null);
+      });
+    }, 420);
   }, [flipState, pageIndex, lang, hasIllustration, rawIllustrationId, markAnchorSeen]);
 
   const goNext = useCallback(() => {
@@ -198,10 +200,12 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
       illustrationId: nextIllustrationId,
     });
     setTimeout(() => {
-      setPageIndex(nextIndex);
-      setFlipState('idle');
-      setNextPageData(null);
-    }, 500);
+      requestAnimationFrame(() => {
+        setPageIndex(nextIndex);
+        setFlipState('idle');
+        setNextPageData(null);
+      });
+    }, 420);
   }, [flipState, pageIndex, lang, hasIllustration, rawIllustrationId, markAnchorSeen]);
 
   // 清除数字输入
