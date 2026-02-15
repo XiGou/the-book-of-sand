@@ -86,8 +86,9 @@
 .book-cover-face {
   position: absolute;
   inset: 0;
-  background: linear-gradient(145deg, #c4b8a8 0%, #a89888 50%, #8a7c6e 100%);
+  background: linear-gradient(165deg, #1a1510 0%, #2c2419 25%, #3d3025 50%, #2c2419 75%, #1a1510 100%);
   border-radius: 0;
+  overflow: hidden;
   box-shadow:
     2px 2px 0 rgba(0,0,0,0.1),
     6px 6px 20px rgba(0,0,0,0.3),
@@ -101,13 +102,17 @@
 }
 
 .book-cover-title {
+  position: relative;
+  z-index: 1;
   font-size: 3.5rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: #f4e4bc;
   text-shadow: 
-    0 2px 4px rgba(0,0,0,0.2),
-    0 1px 0 rgba(255,255,255,0.3);
+    0 2px 8px rgba(0,0,0,0.5),
+    0 0 20px rgba(212, 168, 75, 0.3),
+    0 1px 0 rgba(255,255,255,0.15);
 }
 
 /* 顶部厚度边缘 */

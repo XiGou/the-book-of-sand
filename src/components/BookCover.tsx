@@ -1,5 +1,4 @@
 import type { Lang } from '../lib/book'
-
 import './BookCover.css'
 
 interface BookCoverProps {

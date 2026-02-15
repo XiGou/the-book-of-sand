@@ -40,11 +40,20 @@ html, body {
 }
 
 .app-layout {
+  position: relative;
   width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+}
+
+/* 全页沙粒子背景 - 在书后面，不干扰点击 */
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* A5: 148×210 (single), spread 296×210 */

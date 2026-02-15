@@ -3,6 +3,7 @@ import { About } from './components/About'
 import { BookCover } from './components/BookCover'
 import { BookReader } from './components/BookReader'
 import { Nav, type View } from './components/Nav'
+import { SandParticles } from './components/SandParticles'
 import type { Lang } from './lib/book'
 
 // 懒加载变体页面组件（按需加载，减少首屏包大小）
@@ -40,6 +41,9 @@ function App() {
 
   return (
     <div className="app-layout">
+      <div className="app-bg" aria-hidden>
+        <SandParticles />
+      </div>
       <Nav currentView={view} onNavigate={setView} lang={lang} />
       <main className={`app-main ${view !== 'about' && !isVariationPage ? 'app-main-no-scroll' : ''}`}>
         {view === 'cover' && <BookCover onOpen={openBook} lang={lang} />}
