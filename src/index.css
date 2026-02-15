@@ -52,8 +52,14 @@ html, body {
 .app-bg {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
+}
+
+/* 确保主内容在背景之上（nav 保持 z-index:100 覆盖一切） */
+.app-layout > main {
+  position: relative;
+  z-index: 1;
 }
 
 /* A5: 148×210 (single), spread 296×210 */
