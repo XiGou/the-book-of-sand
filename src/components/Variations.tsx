@@ -12,6 +12,8 @@ const LABELS = {
   hi: { title: 'इससे अधिक' },
   la: { title: 'Plus quam id' },
   el: { title: 'Περισσότερα από αυτό' },
+  ar: { title: 'أكثر من ذلك' },
+  he: { title: 'יותר מזה' },
 } as const
 
 export const VARIATIONS = [
@@ -28,6 +30,8 @@ export const VARIATIONS = [
       hi: 'बड़े अक्षरों के पोस्टर',
       la: 'Tabulae Magnarum Litterarum',
       el: 'Αφίσες Μεγάλων Χαρακτήρων',
+      ar: 'ملصقات الأحرف الكبيرة',
+      he: 'כרזות תווים גדולות',
     } 
   },
   { 
@@ -43,6 +47,8 @@ export const VARIATIONS = [
       hi: 'टेलीविज़न युग',
       la: 'Aetas Televisifica',
       el: 'Εποχή της Τηλεόρασης',
+      ar: 'عصر التلفزيون',
+      he: 'עידן הטלוויזיה',
     } 
   },
   { 
@@ -58,6 +64,8 @@ export const VARIATIONS = [
       hi: 'Xiaohongshu',
       la: 'Xiaohongshu',
       el: 'Xiaohongshu',
+      ar: 'Xiaohongshu',
+      he: 'Xiaohongshu',
     } 
   },
   { 
@@ -73,6 +81,8 @@ export const VARIATIONS = [
       hi: 'Douyin',
       la: 'Douyin',
       el: 'Douyin',
+      ar: 'Douyin',
+      he: 'Douyin',
     } 
   },
   { 
@@ -88,6 +98,8 @@ export const VARIATIONS = [
       hi: 'उपभोक्तावाद',
       la: 'Consumismus',
       el: 'Καταναλωτισμός',
+      ar: 'الاستهلاكية',
+      he: 'צרכנות',
     } 
   },
   { 
@@ -103,6 +115,8 @@ export const VARIATIONS = [
       hi: 'पागल यात्रा',
       la: 'Iter Furiosum',
       el: 'Τρελό Ταξίδι',
+      ar: 'رحلة مجنونة',
+      he: 'מסע משוגע',
     } 
   },
   { 
@@ -118,6 +132,8 @@ export const VARIATIONS = [
       hi: 'वादवाद',
       la: 'Ismismus',
       el: 'Ισμισμός',
+      ar: 'المذهبية',
+      he: 'אִיזְמִיזְם',
     } 
   },
   { 
@@ -133,6 +149,8 @@ export const VARIATIONS = [
       hi: 'बड़ा भाषा मॉडल',
       la: 'Magnum Exemplar Linguae',
       el: 'Μεγάλο Γλωσσικό Μοντέλο',
+      ar: 'نموذج اللغة الكبير',
+      he: 'מודל שפה גדול',
     } 
   },
 ] as const
@@ -171,6 +189,8 @@ export function VariationSelector({ lang, onSelect }: VariationSelectorProps) {
            lang === 'hi' ? 'एक विषय चुनें...' :
            lang === 'la' ? 'Elige thema...' :
            lang === 'el' ? 'Επιλέξτε θέμα...' :
+           lang === 'ar' ? 'اختر موضوعاً...' :
+           lang === 'he' ? 'בחר נושא...' :
            'Select a theme...'}
         </option>
         {VARIATIONS.map((v) => (

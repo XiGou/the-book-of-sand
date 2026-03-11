@@ -16,6 +16,8 @@ import {
   chunksHi,
   chunksLa,
   chunksEl,
+  chunksAr,
+  chunksHe,
 } from '../data/chunks';
 
 const ILLUSTRATION_INTERVAL = 2000;
@@ -146,7 +148,7 @@ export function formatPageNumber(n: string | number, usePower: boolean = false):
   return n.toLocaleString('en-US', { useGrouping: true });
 }
 
-export type Lang = 'en' | 'cn' | 'es' | 'ja' | 'pt' | 'fr' | 'de' | 'hi' | 'la' | 'el';
+export type Lang = 'en' | 'cn' | 'es' | 'ja' | 'pt' | 'fr' | 'de' | 'hi' | 'la' | 'el' | 'ar' | 'he';
 
 const CHUNKS_MAP: Record<Lang, readonly string[]> = {
   en: chunksEn,
@@ -159,6 +161,8 @@ const CHUNKS_MAP: Record<Lang, readonly string[]> = {
   hi: chunksHi,
   la: chunksLa,
   el: chunksEl,
+  ar: chunksAr,
+  he: chunksHe,
 };
 
 export function getPageContent(index: number, lang: Lang): string {

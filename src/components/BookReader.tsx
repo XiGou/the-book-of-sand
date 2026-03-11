@@ -3,7 +3,7 @@ import { getPageContent, getPageNumbers, getIllustration, formatPageNumber, type
 import { Illustration } from './Illustrations'
 import './BookReader.css'
 
-const ALL_LANGS: Lang[] = ['en', 'cn', 'es', 'ja', 'pt', 'fr', 'de', 'hi', 'la', 'el'];
+const ALL_LANGS: Lang[] = ['en', 'cn', 'es', 'ja', 'pt', 'fr', 'de', 'hi', 'la', 'el', 'ar', 'he'];
 
 interface BookReaderProps {
   initialPageIndex: number
@@ -123,6 +123,28 @@ const LABELS = {
     illustrationGone: '[Δεν θα την ξαναδείτε ποτέ.]',
     illustrationHint: 'Κοιτάξτε προσεκτικά. Δεν θα την ξαναδείτε ποτέ.',
   },
+  ar: {
+    prev: 'السابق',
+    next: 'التالي',
+    findFirst: 'البحث عن الصفحة الأولى',
+    findLast: 'البحث عن الصفحة الأخيرة',
+    slip: 'تتسرب الصفحات بين الغلاف وإبهامك…',
+    noFirst: 'لا توجد صفحة أولى.',
+    noLast: 'لا توجد صفحة أخيرة.',
+    illustrationGone: '[لن تراه مرة أخرى أبداً.]',
+    illustrationHint: 'انظر بعناية. لن تراه مرة أخرى أبداً.',
+  },
+  he: {
+    prev: 'הקודם',
+    next: 'הבא',
+    findFirst: 'מצא את הדף הראשון',
+    findLast: 'מצא את הדף האחרון',
+    slip: 'הדפים מחליקים בין הכריכה לאגודל שלך…',
+    noFirst: 'אין דף ראשון.',
+    noLast: 'אין דף אחרון.',
+    illustrationGone: '[לעולם לא תראה אותו שוב.]',
+    illustrationHint: 'הסתכל היטב. לעולם לא תראה אותו שוב.',
+  },
 } as const;
 
 const LANG_NAMES: Record<Lang, string> = {
@@ -136,6 +158,8 @@ const LANG_NAMES: Record<Lang, string> = {
   hi: 'हिन्दी',
   la: 'LA',
   el: 'ΕΛ',
+  ar: 'العربية',
+  he: 'עברית',
 };
 
 export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: BookReaderProps) {
@@ -371,7 +395,13 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                 fontFamily:
                   lang === 'cn' || lang === 'ja' || lang === 'hi'
                     ? 'var(--font-serif-cn)'
+                    : lang === 'ar'
+                    ? 'var(--font-serif-ar)'
+                    : lang === 'he'
+                    ? 'var(--font-serif-he)'
                     : undefined,
+                direction: lang === 'ar' || lang === 'he' ? 'rtl' : undefined,
+                textAlign: lang === 'ar' || lang === 'he' ? 'right' : undefined,
               }}
             >
               {content}
@@ -395,7 +425,13 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                   fontFamily:
                     lang === 'cn' || lang === 'ja' || lang === 'hi'
                       ? 'var(--font-serif-cn)'
+                      : lang === 'ar'
+                      ? 'var(--font-serif-ar)'
+                      : lang === 'he'
+                      ? 'var(--font-serif-he)'
                       : undefined,
+                  direction: lang === 'ar' || lang === 'he' ? 'rtl' : undefined,
+                  textAlign: lang === 'ar' || lang === 'he' ? 'right' : undefined,
                 }}
               >
                 {nextPageData.content}
@@ -420,7 +456,13 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
                   fontFamily:
                     lang === 'cn' || lang === 'ja' || lang === 'hi'
                       ? 'var(--font-serif-cn)'
+                      : lang === 'ar'
+                      ? 'var(--font-serif-ar)'
+                      : lang === 'he'
+                      ? 'var(--font-serif-he)'
                       : undefined,
+                  direction: lang === 'ar' || lang === 'he' ? 'rtl' : undefined,
+                  textAlign: lang === 'ar' || lang === 'he' ? 'right' : undefined,
                 }}
               >
                 {nextPageData.content}

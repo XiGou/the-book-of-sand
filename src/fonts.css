@@ -39,3 +39,37 @@
   font-display: swap;
   src: url('/fonts/noto-serif-sc-600.woff2') format('woff2');
 }
+
+/* Local font files - Amiri (Arabic) */
+@font-face {
+  font-family: 'Amiri';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/amiri-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Amiri';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/amiri-700.woff2') format('woff2');
+}
+
+/* Local font files - Frank Ruhl Libre (Hebrew) */
+@font-face {
+  font-family: 'Frank Ruhl Libre';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/frank-ruhl-libre-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Frank Ruhl Libre';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/frank-ruhl-libre-700.woff2') format('woff2');
+}

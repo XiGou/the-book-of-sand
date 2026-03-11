@@ -8,6 +8,8 @@
   --color-accent: #6b5344;
   --font-serif-en: 'Cormorant Garamond', Georgia, serif;
   --font-serif-cn: 'Noto Serif SC', 'Songti SC', serif;
+  --font-serif-ar: 'Amiri', 'Arabic Typesetting', 'Traditional Arabic', serif;
+  --font-serif-he: 'Frank Ruhl Libre', 'David', 'Arial', serif;
   /* Navigation bar height: padding (1rem top + 1rem bottom) + content (~1.5rem) + border ≈ 4.5rem */
   /* Default value, will be updated dynamically by Nav component */
   --nav-height: 7rem;
