@@ -5,6 +5,15 @@ import './BookReader.css'
 
 const ALL_LANGS: Lang[] = ['en', 'cn', 'es', 'ja', 'pt', 'fr', 'de', 'hi', 'la', 'el', 'ar', 'he'];
 
+const isRtlLang = (lang: Lang): boolean => lang === 'ar' || lang === 'he';
+
+const getPageFontFamily = (lang: Lang): string | undefined => {
+  if (lang === 'cn' || lang === 'ja' || lang === 'hi') return 'var(--font-serif-cn)';
+  if (lang === 'ar') return 'var(--font-serif-ar)';
+  if (lang === 'he') return 'var(--font-serif-he)';
+  return undefined;
+};
+
 interface BookReaderProps {
   initialPageIndex: number
   lang: Lang
@@ -392,16 +401,9 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
             <div
               className="page-content"
               style={{
-                fontFamily:
-                  lang === 'cn' || lang === 'ja' || lang === 'hi'
-                    ? 'var(--font-serif-cn)'
-                    : lang === 'ar'
-                    ? 'var(--font-serif-ar)'
-                    : lang === 'he'
-                    ? 'var(--font-serif-he)'
-                    : undefined,
-                direction: lang === 'ar' || lang === 'he' ? 'rtl' : undefined,
-                textAlign: lang === 'ar' || lang === 'he' ? 'right' : undefined,
+                fontFamily: getPageFontFamily(lang),
+                direction: isRtlLang(lang) ? 'rtl' : undefined,
+                textAlign: isRtlLang(lang) ? 'right' : undefined,
               }}
             >
               {content}
@@ -422,16 +424,9 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
               <div
                 className="page-content"
                 style={{
-                  fontFamily:
-                    lang === 'cn' || lang === 'ja' || lang === 'hi'
-                      ? 'var(--font-serif-cn)'
-                      : lang === 'ar'
-                      ? 'var(--font-serif-ar)'
-                      : lang === 'he'
-                      ? 'var(--font-serif-he)'
-                      : undefined,
-                  direction: lang === 'ar' || lang === 'he' ? 'rtl' : undefined,
-                  textAlign: lang === 'ar' || lang === 'he' ? 'right' : undefined,
+                  fontFamily: getPageFontFamily(lang),
+                  direction: isRtlLang(lang) ? 'rtl' : undefined,
+                  textAlign: isRtlLang(lang) ? 'right' : undefined,
                 }}
               >
                 {nextPageData.content}
@@ -453,16 +448,9 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
               <div
                 className="page-content"
                 style={{
-                  fontFamily:
-                    lang === 'cn' || lang === 'ja' || lang === 'hi'
-                      ? 'var(--font-serif-cn)'
-                      : lang === 'ar'
-                      ? 'var(--font-serif-ar)'
-                      : lang === 'he'
-                      ? 'var(--font-serif-he)'
-                      : undefined,
-                  direction: lang === 'ar' || lang === 'he' ? 'rtl' : undefined,
-                  textAlign: lang === 'ar' || lang === 'he' ? 'right' : undefined,
+                  fontFamily: getPageFontFamily(lang),
+                  direction: isRtlLang(lang) ? 'rtl' : undefined,
+                  textAlign: isRtlLang(lang) ? 'right' : undefined,
                 }}
               >
                 {nextPageData.content}
