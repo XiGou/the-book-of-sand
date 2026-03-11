@@ -23,6 +23,8 @@ const LABELS = {
   hi: { book: 'रेत की किताब', about: 'के बारे में', more: 'इससे अधिक' },
   la: { book: 'Liber arenæ', about: 'De', more: 'Plus quam id' },
   el: { book: 'Βιβλίο της Άμμου', about: 'Σχετικά', more: 'Περισσότερα από αυτό' },
+  ar: { book: 'كتاب الرمال', about: 'حول', more: 'أكثر من ذلك' },
+  he: { book: 'ספר החול', about: 'אודות', more: 'יותר מזה' },
 } as const
 
 const ARIA_LABELS: Record<Lang, string> = {
@@ -36,6 +38,8 @@ const ARIA_LABELS: Record<Lang, string> = {
   hi: 'मुख्य नेविगेशन',
   la: 'Navigatio principalis',
   el: 'Κύρια πλοήγηση',
+  ar: 'التنقل الرئيسي',
+  he: 'ניווט ראשי',
 }
 
 export function Nav({ currentView, onNavigate, lang }: NavProps) {

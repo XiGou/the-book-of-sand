@@ -14,6 +14,10 @@ REQUIRED_FONTS=(
   "cormorant-garamond-600.woff2"
   "noto-serif-sc-400.woff2"
   "noto-serif-sc-600.woff2"
+  "amiri-400.woff2"
+  "amiri-700.woff2"
+  "frank-ruhl-libre-400.woff2"
+  "frank-ruhl-libre-700.woff2"
 )
 
 # Check if all fonts already exist
@@ -93,6 +97,103 @@ if [ ! -f "$FONT_DIR/noto-serif-sc-600.woff2" ]; then
       exit 1
     fi
   }
+fi
+
+# Download Amiri fonts (Arabic)
+if [ ! -f "$FONT_DIR/amiri-400.woff2" ]; then
+  echo "Downloading Amiri 400 (Arabic)..."
+  # Get font URL from Google Fonts CSS API
+  AMIRI_CSS=$(curl -s -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@400&display=swap" 2>/dev/null || echo "")
+  AMIRI_400_URL=$(echo "$AMIRI_CSS" | grep -o 'https://fonts.gstatic.com[^)]*' | head -1)
+  if [ -n "$AMIRI_400_URL" ]; then
+    curl -L -f -o "$FONT_DIR/amiri-400.woff2" "$AMIRI_400_URL" || {
+      echo "Warning: Failed to download Amiri 400, will use system Arabic fonts as fallback"
+      touch "$FONT_DIR/amiri-400.woff2"
+    }
+  else
+    # Fallback to known CDN URL
+    curl -L -f -o "$FONT_DIR/amiri-400.woff2" \
+      "https://fonts.gstatic.com/s/amiri/v27/J7aRnpd8CGxBHpUpvrIw74NL.woff2" || {
+      echo "Warning: Failed to download Amiri 400, will use system Arabic fonts as fallback"
+      touch "$FONT_DIR/amiri-400.woff2"
+    }
+  fi
+fi
+
+if [ ! -f "$FONT_DIR/amiri-700.woff2" ]; then
+  echo "Downloading Amiri 700 (Arabic)..."
+  AMIRI_CSS=$(curl -s -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@700&display=swap" 2>/dev/null || echo "")
+  AMIRI_700_URL=$(echo "$AMIRI_CSS" | grep -o 'https://fonts.gstatic.com[^)]*' | head -1)
+  if [ -n "$AMIRI_700_URL" ]; then
+    curl -L -f -o "$FONT_DIR/amiri-700.woff2" "$AMIRI_700_URL" || {
+      echo "Warning: Failed to download Amiri 700, using 400 weight as fallback"
+      if [ -f "$FONT_DIR/amiri-400.woff2" ] && [ -s "$FONT_DIR/amiri-400.woff2" ]; then
+        cp "$FONT_DIR/amiri-400.woff2" "$FONT_DIR/amiri-700.woff2"
+      else
+        touch "$FONT_DIR/amiri-700.woff2"
+      fi
+    }
+  else
+    curl -L -f -o "$FONT_DIR/amiri-700.woff2" \
+      "https://fonts.gstatic.com/s/amiri/v27/J7acnpd8CGxBHp2VkZY4xJ9CGyAa.woff2" || {
+      echo "Warning: Failed to download Amiri 700, using 400 weight as fallback"
+      if [ -f "$FONT_DIR/amiri-400.woff2" ] && [ -s "$FONT_DIR/amiri-400.woff2" ]; then
+        cp "$FONT_DIR/amiri-400.woff2" "$FONT_DIR/amiri-700.woff2"
+      else
+        touch "$FONT_DIR/amiri-700.woff2"
+      fi
+    }
+  fi
+fi
+
+# Download Frank Ruhl Libre fonts (Hebrew)
+if [ ! -f "$FONT_DIR/frank-ruhl-libre-400.woff2" ]; then
+  echo "Downloading Frank Ruhl Libre 400 (Hebrew)..."
+  FRL_CSS=$(curl -s -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+    "https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400&display=swap" 2>/dev/null || echo "")
+  FRL_400_URL=$(echo "$FRL_CSS" | grep -o 'https://fonts.gstatic.com[^)]*' | head -1)
+  if [ -n "$FRL_400_URL" ]; then
+    curl -L -f -o "$FONT_DIR/frank-ruhl-libre-400.woff2" "$FRL_400_URL" || {
+      echo "Warning: Failed to download Frank Ruhl Libre 400, will use system Hebrew fonts as fallback"
+      touch "$FONT_DIR/frank-ruhl-libre-400.woff2"
+    }
+  else
+    # Fallback to known CDN URL
+    curl -L -f -o "$FONT_DIR/frank-ruhl-libre-400.woff2" \
+      "https://fonts.gstatic.com/s/frankruhllibre/v16/j8_36_fAw7jrcalD7oKYNX0QfAnPa7fv4hiGIbrA.woff2" || {
+      echo "Warning: Failed to download Frank Ruhl Libre 400, will use system Hebrew fonts as fallback"
+      touch "$FONT_DIR/frank-ruhl-libre-400.woff2"
+    }
+  fi
+fi
+
+if [ ! -f "$FONT_DIR/frank-ruhl-libre-700.woff2" ]; then
+  echo "Downloading Frank Ruhl Libre 700 (Hebrew)..."
+  FRL_CSS=$(curl -s -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+    "https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700&display=swap" 2>/dev/null || echo "")
+  FRL_700_URL=$(echo "$FRL_CSS" | grep -o 'https://fonts.gstatic.com[^)]*' | head -1)
+  if [ -n "$FRL_700_URL" ]; then
+    curl -L -f -o "$FONT_DIR/frank-ruhl-libre-700.woff2" "$FRL_700_URL" || {
+      echo "Warning: Failed to download Frank Ruhl Libre 700, using 400 weight as fallback"
+      if [ -f "$FONT_DIR/frank-ruhl-libre-400.woff2" ] && [ -s "$FONT_DIR/frank-ruhl-libre-400.woff2" ]; then
+        cp "$FONT_DIR/frank-ruhl-libre-400.woff2" "$FONT_DIR/frank-ruhl-libre-700.woff2"
+      else
+        touch "$FONT_DIR/frank-ruhl-libre-700.woff2"
+      fi
+    }
+  else
+    curl -L -f -o "$FONT_DIR/frank-ruhl-libre-700.woff2" \
+      "https://fonts.gstatic.com/s/frankruhllibre/v16/j8_96_fAw7jrcalD7oKYNX0QfAnPcbzNEEF8.woff2" || {
+      echo "Warning: Failed to download Frank Ruhl Libre 700, using 400 weight as fallback"
+      if [ -f "$FONT_DIR/frank-ruhl-libre-400.woff2" ] && [ -s "$FONT_DIR/frank-ruhl-libre-400.woff2" ]; then
+        cp "$FONT_DIR/frank-ruhl-libre-400.woff2" "$FONT_DIR/frank-ruhl-libre-700.woff2"
+      else
+        touch "$FONT_DIR/frank-ruhl-libre-700.woff2"
+      fi
+    }
+  fi
 fi
 
 echo "Font files download completed!"

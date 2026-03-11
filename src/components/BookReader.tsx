@@ -3,7 +3,16 @@ import { getPageContent, getPageNumbers, getIllustration, formatPageNumber, type
 import { Illustration } from './Illustrations'
 import './BookReader.css'
 
-const ALL_LANGS: Lang[] = ['en', 'cn', 'es', 'ja', 'pt', 'fr', 'de', 'hi', 'la', 'el'];
+const ALL_LANGS: Lang[] = ['en', 'cn', 'es', 'ja', 'pt', 'fr', 'de', 'hi', 'la', 'el', 'ar', 'he'];
+
+const isRtlLang = (lang: Lang): boolean => lang === 'ar' || lang === 'he';
+
+const getPageFontFamily = (lang: Lang): string | undefined => {
+  if (lang === 'cn' || lang === 'ja' || lang === 'hi') return 'var(--font-serif-cn)';
+  if (lang === 'ar') return 'var(--font-serif-ar)';
+  if (lang === 'he') return 'var(--font-serif-he)';
+  return undefined;
+};
 
 interface BookReaderProps {
   initialPageIndex: number
@@ -123,6 +132,28 @@ const LABELS = {
     illustrationGone: '[Δεν θα την ξαναδείτε ποτέ.]',
     illustrationHint: 'Κοιτάξτε προσεκτικά. Δεν θα την ξαναδείτε ποτέ.',
   },
+  ar: {
+    prev: 'السابق',
+    next: 'التالي',
+    findFirst: 'البحث عن الصفحة الأولى',
+    findLast: 'البحث عن الصفحة الأخيرة',
+    slip: 'تتسرب الصفحات بين الغلاف وإبهامك…',
+    noFirst: 'لا توجد صفحة أولى.',
+    noLast: 'لا توجد صفحة أخيرة.',
+    illustrationGone: '[لن تراه مرة أخرى أبداً.]',
+    illustrationHint: 'انظر بعناية. لن تراه مرة أخرى أبداً.',
+  },
+  he: {
+    prev: 'הקודם',
+    next: 'הבא',
+    findFirst: 'מצא את הדף הראשון',
+    findLast: 'מצא את הדף האחרון',
+    slip: 'הדפים מחליקים בין הכריכה לאגודל שלך…',
+    noFirst: 'אין דף ראשון.',
+    noLast: 'אין דף אחרון.',
+    illustrationGone: '[לעולם לא תראה אותו שוב.]',
+    illustrationHint: 'הסתכל היטב. לעולם לא תראה אותו שוב.',
+  },
 } as const;
 
 const LANG_NAMES: Record<Lang, string> = {
@@ -136,6 +167,8 @@ const LANG_NAMES: Record<Lang, string> = {
   hi: 'हिन्दी',
   la: 'LA',
   el: 'ΕΛ',
+  ar: 'العربية',
+  he: 'עברית',
 };
 
 export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: BookReaderProps) {
@@ -368,10 +401,9 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
             <div
               className="page-content"
               style={{
-                fontFamily:
-                  lang === 'cn' || lang === 'ja' || lang === 'hi'
-                    ? 'var(--font-serif-cn)'
-                    : undefined,
+                fontFamily: getPageFontFamily(lang),
+                direction: isRtlLang(lang) ? 'rtl' : undefined,
+                textAlign: isRtlLang(lang) ? 'right' : undefined,
               }}
             >
               {content}
@@ -392,10 +424,9 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
               <div
                 className="page-content"
                 style={{
-                  fontFamily:
-                    lang === 'cn' || lang === 'ja' || lang === 'hi'
-                      ? 'var(--font-serif-cn)'
-                      : undefined,
+                  fontFamily: getPageFontFamily(lang),
+                  direction: isRtlLang(lang) ? 'rtl' : undefined,
+                  textAlign: isRtlLang(lang) ? 'right' : undefined,
                 }}
               >
                 {nextPageData.content}
@@ -417,10 +448,9 @@ export function BookReader({ initialPageIndex, lang, onLangChange, onClose }: Bo
               <div
                 className="page-content"
                 style={{
-                  fontFamily:
-                    lang === 'cn' || lang === 'ja' || lang === 'hi'
-                      ? 'var(--font-serif-cn)'
-                      : undefined,
+                  fontFamily: getPageFontFamily(lang),
+                  direction: isRtlLang(lang) ? 'rtl' : undefined,
+                  textAlign: isRtlLang(lang) ? 'right' : undefined,
                 }}
               >
                 {nextPageData.content}
