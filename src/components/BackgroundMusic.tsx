@@ -28,7 +28,8 @@ function createReverbBuffer(ctx: AudioContext): AudioBuffer {
 }
 
 export function BackgroundMusic() {
-  const [playing, setPlaying] = useState(false)
+  // Default to true – engine starts on first user interaction anywhere on the page
+  const [playing, setPlaying] = useState(true)
 
   // Audio graph refs
   const ctxRef      = useRef<AudioContext | null>(null)
@@ -37,6 +38,11 @@ export function BackgroundMusic() {
   const oscsRef     = useRef<(OscillatorNode | null)[]>([])
   const timerRef    = useRef<ReturnType<typeof setTimeout> | null>(null)
   const nextTimeRef = useRef<number>(0)
+
+  // Mirrors `playing` so the first-interaction handler can read the latest value
+  const playingRef  = useRef(true)
+  // Set to true once the AudioContext has been created for the first time
+  const startedRef  = useRef(false)
 
   // ------------------------------------------------------------------
   // Scheduler: plant a bell tone and re-schedule itself
@@ -174,17 +180,56 @@ export function BackgroundMusic() {
     }
   }, [])
 
+  // Keep playingRef in sync with state so the first-interaction handler sees the current value
+  useEffect(() => {
+    playingRef.current = playing
+  }, [playing])
+
+  // ------------------------------------------------------------------
+  // Auto-start: kick off engine on the very first user interaction
+  // ------------------------------------------------------------------
+  useEffect(() => {
+    const startOnInteraction = () => {
+      if (!startedRef.current && playingRef.current) {
+        startedRef.current = true
+        startEngine()
+      }
+      // Always remove after first interaction, whether we started or not
+      document.removeEventListener('click',      startOnInteraction, true)
+      document.removeEventListener('keydown',    startOnInteraction, true)
+      document.removeEventListener('touchstart', startOnInteraction, true)
+    }
+
+    // Capture phase so we fire before any element's own click handler
+    document.addEventListener('click',      startOnInteraction, true)
+    document.addEventListener('keydown',    startOnInteraction, true)
+    document.addEventListener('touchstart', startOnInteraction, true)
+
+    return () => {
+      document.removeEventListener('click',      startOnInteraction, true)
+      document.removeEventListener('keydown',    startOnInteraction, true)
+      document.removeEventListener('touchstart', startOnInteraction, true)
+    }
+  }, [startEngine]) // stable: scheduleNextBell has no deps, so startEngine is also stable
+
   // ------------------------------------------------------------------
   // Toggle
   // ------------------------------------------------------------------
   const toggle = () => {
     setPlaying(prev => {
       const next = !prev
-      if (next) {
-        startEngine()
-      } else {
-        stopEngine()
+      playingRef.current = next
+      if (startedRef.current) {
+        // Engine has already been created at least once
+        if (next) {
+          startEngine()
+        } else {
+          stopEngine()
+        }
       }
+      // If engine not yet started (first interaction hasn't happened):
+      // just updating playingRef is enough — the auto-start handler
+      // checks playingRef.current before calling startEngine().
       return next
     })
   }
@@ -224,7 +269,8 @@ export function BackgroundMusic() {
       aria-label={playing ? '关闭背景音乐' : '开启背景音乐'}
       title={playing ? '关闭音乐' : '开启音乐'}
     >
-      {playing ? <Volume2 size={15} /> : <VolumeX size={15} />}
+      {playing ? <Volume2 size={14} /> : <VolumeX size={14} />}
+      <span>{playing ? '音乐' : '静音'}</span>
     </button>
   )
 }
