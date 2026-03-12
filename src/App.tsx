@@ -1,5 +1,6 @@
 import { useState, Suspense, lazy } from 'react'
 import { About } from './components/About'
+import { BackgroundMusic } from './components/BackgroundMusic'
 import { BookCover } from './components/BookCover'
 import { BookReader } from './components/BookReader'
 import { Nav, type View } from './components/Nav'
@@ -45,6 +46,7 @@ function App() {
         <SandParticles />
       </div>
       <Nav currentView={view} onNavigate={setView} lang={lang} />
+      <BackgroundMusic />
       <main className={`app-main ${view !== 'about' && !isVariationPage ? 'app-main-no-scroll' : ''}`}>
         {view === 'cover' && <BookCover onOpen={openBook} lang={lang} />}
         {view === 'about' && <About lang={lang} />}
